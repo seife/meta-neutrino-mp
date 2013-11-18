@@ -1,0 +1,32 @@
+From a2921aed969efaea38258d78d3b54abca2a00e49 Mon Sep 17 00:00:00 2001
+From: "[CST] Focus" <focus.cst@gmail.com>
+Date: Wed, 22 May 2013 13:01:48 +0400
+Subject: [PATCH 7/9] libavformat/utils.c: comment symlink to av_gettime, one
+ of compile tool chains doesnt like this
+
+---
+ libavformat/utils.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libavformat/utils.c b/libavformat/utils.c
+index 7383cde..6d2b7ee 100644
+--- a/libavformat/utils.c
++++ b/libavformat/utils.c
+@@ -3616,12 +3616,14 @@ void av_dump_format(AVFormatContext *ic,
+     av_free(printed);
+ }
+ 
++#if 0
+ #if FF_API_AV_GETTIME && CONFIG_SHARED && HAVE_SYMVER
+ FF_SYMVER(int64_t, av_gettime, (void), "LIBAVFORMAT_54")
+ {
+     return av_gettime();
+ }
+ #endif
++#endif
+ 
+ uint64_t ff_ntp_time(void)
+ {
+-- 
+1.8.4.2
+

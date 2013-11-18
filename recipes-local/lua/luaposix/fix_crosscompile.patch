@@ -1,0 +1,24 @@
+--- luaposix-5.1.28/m4/ax_lua.m4	2013-03-23 13:42:32.000000000 +0100
++++ luaposix-5.1.28_/m4/ax_lua.m4	2013-04-17 22:11:54.302587324 +0200
+@@ -468,7 +468,7 @@
+       done
+     ])
+ 
+-  AS_IF([test "x$ac_cv_header_lua_h" = 'xyes'],
++  AS_IF([test "x$ac_cv_header_lua_h" = 'xyes' && test "x$cross_compiling" != 'xyes'],
+     [ dnl Make a program to print LUA_VERSION defined in the header.
+       dnl TODO This probably shouldn't be a runtime test.
+ 
+@@ -505,7 +505,11 @@
+         [ AC_MSG_RESULT([no])
+           ax_header_version_match='no'
+         ])
+-    ])
++    ],
++    [ 
++      ax_header_version_match='yes'
++    ]
++)
+ 
+   dnl Was LUA_INCLUDE specified?
+   AS_IF([test "x$ax_header_version_match" != 'xyes' &&

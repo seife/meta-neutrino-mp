@@ -1,0 +1,14 @@
+Index: CMakeLists.txt
+===================================================================
+--- CMakeLists.txt	(Revision 13083)
++++ CMakeLists.txt	(Arbeitskopie)
+@@ -8,6 +8,9 @@
+     ENDIF(APPLE)
+ ENDIF(WIN32)
+ 
++if(POLICY CMP0014)
++   cmake_policy(SET CMP0014 OLD) # or even better, NEW
++endif(POLICY CMP0014)
+ 
+ PROJECT(OpenThreads)
+ 
