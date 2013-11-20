@@ -4,7 +4,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://doc/readme.html;beginline=362;endline=396;md5=ffcafb3f03e29955d3f1fdfd5a4a72e7"
 HOMEPAGE = "http://www.lua.org/"
 
-DEPENDS += "readline"
+# readline pulls in a heap of runtime dependencies...
+# DEPENDS += "readline"
 PR = "r0"
 SRC_URI = "http://www.lua.org/ftp/lua-${PV}.tar.gz \
            file://lua5.2.pc \
