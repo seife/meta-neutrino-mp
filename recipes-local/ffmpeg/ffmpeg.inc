@@ -63,6 +63,8 @@ EXTRA_OECONF_append_raspberrypi = " \
 EXTRA_OECONF_append_coolstream = " \
 	--arch=arm \
 	--cpu=armv6 \
+	--disable-libtheora \
+	--disable-libvorbis \
 "
 
 do_configure() {
