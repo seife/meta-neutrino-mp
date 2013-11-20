@@ -1,12 +1,6 @@
 #!/bin/sh
 export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 
-# because of the rsync-excludes, this might be necessary:
-for i in tuxtxt zapit links; do
-	[ -e /var/tuxbox/config/$i ] || mkdir -p /var/tuxbox/config/$i
-done
-
-
 # spark: find out if we are running on HDMI or on SCART...
 if [ -e /sys/class/stmcoredisplay/hdmi0.0/hotplug ]; then
 	read H < /sys/class/stmcoredisplay/hdmi0.0/hotplug

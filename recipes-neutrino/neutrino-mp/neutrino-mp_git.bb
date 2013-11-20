@@ -29,8 +29,6 @@ DEPENDS += " \
 
 RDEPENDS_${PN} += " \
 	tzdata \
-	lua5.2 \
-	luaposix \
 "
 
 RCONFLICTS_${PN} = "neutrino-hd2"
@@ -39,10 +37,12 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 #SRCREV = "e92afd2b420f2e53cf45a79b29b9898df406fe2b"
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r16.3"
+PR = "r17"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
+	file://neutrino.init \
+	file://timezone.xml \
 	file://COPYING.GPL \
 "
 
@@ -96,8 +96,9 @@ do_compile () {
 
 
 do_install_prepend () {
-	# install -d ${D}/${sysconfdir}/init.d
-	# install -m 755 ${WORKDIR}/neutrino.init ${D}/${sysconfdir}/init.d/neutrino
+	install -d ${D}/${sysconfdir}/init.d
+	install -m 755 ${WORKDIR}/neutrino.init ${D}/${sysconfdir}/init.d/neutrino
+	install -m 644 ${WORKDIR}/timezone.xml ${D}/${sysconfdir}/timezone.xml
 	install -d ${D}/share/tuxbox/neutrino/httpd-y
 	install -d ${D}/share/tuxbox/neutrino/httpd
 	install -d ${D}/share/fonts
@@ -143,5 +144,4 @@ pkg_postinst_${PN} () {
 
 pkg_prerm_${PN} () {
 }
-
 
