@@ -37,7 +37,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 #SRCREV = "e92afd2b420f2e53cf45a79b29b9898df406fe2b"
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r17"
+PR = "r18"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
@@ -55,13 +55,13 @@ INITSCRIPT_NAME_${PN} = "neutrino"
 INITSCRIPT_PARAMS_${PN} = "start 99 5 2 . stop 20 0 1 6 ."
 
 
-N_CFLAGS = "-Wall -W -Wshadow -g -O2 -fno-strict-aliasing -funsigned-char -rdynamic -DDYNAMIC_LUAPOSIX"
+N_CFLAGS = "-Wall -W -Wshadow -g -O2 -fno-strict-aliasing -funsigned-char -rdynamic"
 N_CXXFLAGS = "${N_CFLAGS}"
-N_LDFLAGS += "-Wl,-rpath-link,${STAGING_DIR_HOST}/usr/lib -lavformat"
+N_LDFLAGS += "-Wl,-rpath-link,${STAGING_DIR_HOST}/usr/lib"
 
-
-# EXTRA_OEMAKE += " 'LIBS=-lavformat'"
-
+N_CPPFLAGS = "-DDYNAMIC_LUAPOSIX"
+CPPFLAGS = "${N_CPPFLAGS}"
+CPPFLAGS_tripledragon += "${N_CPPFLAGS} -I${STAGING_DIR_HOST}/usr/include/hardware"
 
 EXTRA_OECONF = " \
 	--enable-maintainer-mode \
@@ -77,6 +77,10 @@ EXTRA_OECONF_append_raspberrypi += "\
 	--with-boxtype=generic --with-boxmodel=raspi \
 "
 
+EXTRA_OECONF_append_tripledragon += "\
+	--with-boxtype=tripledragon \
+"
+
 EXTRA_OECONF_append_coolstream += "\
 	--with-boxtype=coolstream \
 "
@@ -90,7 +94,7 @@ EXTRA_OECONF_append_spark7162 += "\
 "
 
 do_compile () {
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+	# unset CFLAGS CXXFLAGS LDFLAGS
 	oe_runmake CFLAGS="${N_CFLAGS}" CXXFLAGS="${N_CXXFLAGS}" LDFLAGS="${N_LDFLAGS}"
 }
 
