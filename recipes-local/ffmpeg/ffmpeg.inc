@@ -66,6 +66,22 @@ EXTRA_OECONF_append_coolstream = " \
 	--disable-libtheora \
 	--disable-libvorbis \
 "
+# strip down ffmpeg for tripledragon: most of it is not useful here.
+# --arch=ppc4xx seems to still have a problem with the assembler...
+EXTRA_OECONF_append_tripledragon = " \
+	--arch=ppc4xx \
+	--disable-altivec \
+	--disable-libtheora \
+	--disable-libvorbis \
+	--disable-encoders --disable-muxers \
+	--disable-decoders --disable-protocols \
+	--disable-parsers --disable-demuxers \
+	--enable-protocol=file \
+	--enable-encoder=mpeg2video --enable-muxer=mpeg2video \
+	--enable-decoder=dvbsub --enable-demuxer=mpegps \
+	--enable-parser=mjpeg --enable-demuxer=mjpeg --enable-decoder=mjpeg \
+	--disable-bsfs --disable-network \
+"
 
 do_configure() {
     # We don't have TARGET_PREFIX-pkgconfig
