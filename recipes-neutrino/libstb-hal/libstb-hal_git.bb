@@ -23,12 +23,13 @@ PROVIDES += "virtual/stb-hal-libs"
 DEPENDS_append_spark = "tdt-driver libass"
 DEPENDS_append_spark7162 = "tdt-driver libass"
 DEPENDS_append_raspberrypi = "virtual/egl"
+DEPENDS_append_tripledragon = "directfb triple-sdk"
 
 RDEPENDS_${PN} = "ffmpeg"
 
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r6.1"
+PR = "r7"
 
 PACKAGES_spark += "spark-fp"
 PACKAGES_spark7162 += "spark-fp"
@@ -42,13 +43,13 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
-CFLAGS_append = " -Wall -W -Wshadow -g -O2 -fno-strict-aliasing -rdynamic -DNEW_LIBCURL"
+# CFLAGS_append = " -Wall -W -Wshadow -g -O2 -fno-strict-aliasing -rdynamic -DNEW_LIBCURL"
 
 SPARK_GEN_CFLAGS = "-funsigned-char"
 
 CFLAGS_spark += "${SPARK_GEN_CFLAGS} "
 CFLAGS_spark7162 += "${SPARK_GEN_CFLAGS} "
-
+CPPFLAGS_tripledragon += "-I${STAGING_DIR_HOST}/usr/include/hardware"
 
 LDFLAGS = " -Wl,-rpath-link,${STAGING_DIR_HOST}/usr/lib -L${STAGING_DIR_HOST}/usr/lib"
 
@@ -63,6 +64,7 @@ SPARK_GEN_EXTRA_OECONF = " --with-boxtype=spark "
 EXTRA_OECONF_append_spark += "${SPARK_GEN_EXTRA_OECONF}"
 EXTRA_OECONF_append_spark7162 += "${SPARK_GEN_EXTRA_OECONF}"
 EXTRA_OECONF_append_raspberrypi += "--with-boxtype=generic --with-boxmodel=raspi"
+EXTRA_OECONF_append_tripledragon += "--with-boxtype=tripledragon"
 
 FILES_${PN} = "\
 	${libdir}/* \
