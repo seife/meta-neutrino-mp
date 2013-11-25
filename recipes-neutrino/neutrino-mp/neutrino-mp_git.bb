@@ -31,6 +31,8 @@ RDEPENDS_${PN} += " \
 	tzdata \
 "
 
+RDEPENDS_${PN}_append_tripledragon += "kernel-module-td-dvb-frontend"
+
 RCONFLICTS_${PN} = "neutrino-hd2"
 
 #SRCREV = "c7a4927b53f674323931471b05b83a455a0e6506"
