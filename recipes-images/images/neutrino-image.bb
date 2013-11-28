@@ -8,6 +8,7 @@ IMAGE_INSTALL += " \
 	neutrino-mp \
 	strace \
 	procps \
+	image-config \
 "
 
 # Include modules in rootfs, but not on coolstream, where

@@ -1,0 +1,2 @@
+# we don't need it.
+BOOTLOGD_ENABLE="no"
