@@ -2,7 +2,7 @@ DESCRIPTION = "Neutrino-MP image feed configuration"
 # derived from poky-feed-config
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r0"
+PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -12,10 +12,8 @@ FEEDNAMEPREFIX ?= "nmp"
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg/
 
-	archconf=${S}/${sysconfdir}/opkg/arch.conf
 	basefeedconf=${S}/${sysconfdir}/opkg/base-feeds.conf
 	rm -f $basefeedconf
-	rm -f $archconf
 	touch $basefeedconf
 	if [ -n "${IPK_FEED_SERVER}" ]; then
 		echo "# URI prefix '${IPK_FEED_SERVER}'" >> $basefeedconf
@@ -29,10 +27,7 @@ do_compile() {
 	echo "#" >> $basefeedconf
 
 	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS}"
-	priority=1
 	for arch in $ipkgarchs; do
-		echo "arch $arch $priority" >> $archconf
-		priority=$(expr $priority + 5)
 		FNAME="${FEEDNAMEPREFIX}-$arch"
 		if [ -n "${IPK_FEED_SERVER}" ]; then
 			URI="${IPK_FEED_SERVER}/$arch"
@@ -56,6 +51,4 @@ do_install () {
 
 FILES_${PN} = "${sysconfdir}/opkg/ "
 
-CONFFILES_${PN} += "${sysconfdir}/opkg/base-feeds.conf \
-                    ${sysconfdir}/opkg/arch.conf"
-
+CONFFILES_${PN} += "${sysconfdir}/opkg/base-feeds.conf"
