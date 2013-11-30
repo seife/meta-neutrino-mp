@@ -9,6 +9,7 @@ IMAGE_INSTALL += " \
 	strace \
 	procps \
 	image-config \
+	udev-extraconf \
 "
 
 # Include modules in rootfs, but not on coolstream, where
