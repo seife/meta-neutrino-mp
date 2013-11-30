@@ -14,3 +14,5 @@ IMAGE_INSTALL += " \
 # Include modules in rootfs, but not on coolstream, where
 # flash is small...
 IMAGE_INSTALL += "${@'kernel-modules' if MACHINE != 'coolstream' else ''}"
+
+EXTRAOPKGCONFIG = "neutrino-feed-config"
