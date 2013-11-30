@@ -1,48 +1,63 @@
 #!/bin/sh
-export PATH=/sbin:/bin:/usr/bin:/usr/sbin
+#
+test -e /etc/default/neutrino && . /etc/default/neutrino
 
-# spark: find out if we are running on HDMI or on SCART...
-if [ -e /sys/class/stmcoredisplay/hdmi0.0/hotplug ]; then
-	read H < /sys/class/stmcoredisplay/hdmi0.0/hotplug
-	if [ "$H" = n ]; then
-		if ! [ -e /var/tuxbox/config/neutrino.conf ]; then
-			# first boot... set framebuffer to the correct resolution
-			echo "pal" > /proc/stb/video/videomode
+MESSAGE=:
+type -p drivertool > /dev/null && MESSAGE="drivertool VFD_SET_TEXT"
+
+start_neutrino() {
+	# spark: find out if we are running on HDMI or on SCART...
+	if [ -e /sys/class/stmcoredisplay/hdmi0.0/hotplug ]; then
+		read H < /sys/class/stmcoredisplay/hdmi0.0/hotplug
+		if [ "$H" = n ]; then
+			if ! [ -e /var/tuxbox/config/neutrino.conf ]; then
+				# first boot... set framebuffer to the correct resolution
+				echo "pal" > /proc/stb/video/videomode
+			fi
+			export NEUTRINO_DEFAULT_SCART=yes
 		fi
-		export NEUTRINO_DEFAULT_SCART=yes
+		echo
+		echo "HDMI detected: $H"
+		echo "NEUTRINO_DEFAULT_SCART: ${NEUTRINO_DEFAULT_SCART:-no}"
+		echo
 	fi
-	echo
-	echo "HDMI detected: $H"
-	echo "NEUTRINO_DEFAULT_SCART: ${NEUTRINO_DEFAULT_SCART:-no}"
-	echo
-fi
 
-case "$1" in
-  start)
-    echo -n "Starting neutrino"
-    start-stop-daemon --start --oknodo --name neutrino  -b -m --pidfile /var/run/neutrino.pid --exec neutrino
-    echo "."
-    ;;
-  stop)
-    echo -n "Stopping neutrino"
-    start-stop-daemon --stop --oknodo --name neutrino --pidfile /var/run/neutrino.pid --retry 5
-    echo "."
-    ;;
-  reload|force-reload)
-    start-stop-daemon --stop --quiet --signal 1 --exec neutrino
-    ;;
-  restart)
-    echo -n "Stopping neutrino"
-    start-stop-daemon --stop --quiet --exec neutrino 
-    sleep 1
-    echo -n "Starting neutrino"
-    start-stop-daemon --start --quiet --exec neutrino &
-    echo "."
-    ;;
-  *)
-    echo "Usage: /etc/init.d/neutrino {start|stop|reload|restart|force-reload}"
-    exit 1
+	QUIET=""
+	[ x$NEUTRINO_QUIET = xyes ] && QUIET=">/dev/null 2>&1"
+	# coolstream: work around driver problems
+	type -p uncoolinit > /dev/null && uncoolinit $QUIET
+	start-stop-daemon -S -p /var/run/neutrino.pid -m -o -x neutrino $QUIET
+	RET=$?
+	echo "Neutrino exited with exit code $RET"
+	$MESSAGE "neutrino:$RET"
+	if [ $RET = 1 ]; then
+		touch /tmp/.halt
+	fi
+	$MESSAGE "start_n ends"
+	if [ -e /tmp/.reboot ]; then # gets created by neutrino
+		$MESSAGE "rebooting..."
+		reboot
+	fi
+	if [ -e /tmp/.halt ]; then
+		$MESSAGE "shutting down..."
+		poweroff
+	fi
+}
+
+case $1 in
+	start)
+		# this makes for a nicer ps xauww listing...
+		exec /etc/init.d/neutrino start_neutrino &
+		;;
+	start_neutrino)
+		start_neutrino &
+		;;
+	stop)
+		start-stop-daemon -K -q -s TERM -p /var/run/neutrino.pid -x neutrino || exit 0
+		# wait for neutrino to really shut down
+		for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19; do
+			start-stop-daemon -K -q -t -p /var/run/neutrino.pid -x neutrino || break
+			sleep 1
+		done
+		;;
 esac
-
-exit 0
-

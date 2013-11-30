@@ -39,7 +39,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 #SRCREV = "e92afd2b420f2e53cf45a79b29b9898df406fe2b"
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r18"
+PR = "r19"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
@@ -54,7 +54,7 @@ inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_PACKAGES   = "${PN}"
 INITSCRIPT_NAME_${PN} = "neutrino"
-INITSCRIPT_PARAMS_${PN} = "start 99 5 2 . stop 20 0 1 6 ."
+INITSCRIPT_PARAMS_${PN} = "start 99 5 . stop 20 0 1 2 3 4 6 ."
 
 
 N_CFLAGS = "-Wall -W -Wshadow -g -O2 -fno-strict-aliasing -funsigned-char -rdynamic"
