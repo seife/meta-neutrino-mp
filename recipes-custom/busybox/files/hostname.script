@@ -1,0 +1,11 @@
+#!/bin/sh
+
+case $1 in
+	bound) ;;
+	*) exit 0 ;;
+esac
+
+if [ -n "$hostname" ]; then
+	echo "$0: setting hostname to '$hostname'."
+	hostname $hostname
+fi
