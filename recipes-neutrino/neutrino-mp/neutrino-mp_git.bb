@@ -31,6 +31,10 @@ RDEPENDS_${PN} += " \
 	tzdata \
 "
 
+# maybe this should rather be in the image dependencies? it is not needed for building...
+DEPENDS_append_tripledragon = " \
+	td-dvb-wrapper \
+"
 RDEPENDS_${PN}_append_tripledragon += "kernel-module-td-dvb-frontend"
 
 RCONFLICTS_${PN} = "neutrino-hd2"
@@ -39,7 +43,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 #SRCREV = "e92afd2b420f2e53cf45a79b29b9898df406fe2b"
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r19"
+PR = "r20"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
@@ -110,7 +114,3 @@ pkg_postinst_${PN} () {
 		pic2m2v $I/mp3.jpg $I/radiomode.jpg $I/scan.jpg $I/shutdown.jpg $I/start.jpg
 	fi
 }
-
-pkg_prerm_${PN} () {
-}
-
