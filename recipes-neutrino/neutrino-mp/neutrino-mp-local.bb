@@ -3,6 +3,8 @@
 #### no packages are built.
 #### sources are taken from ${NEUTRINO_SOURCEDIR}
 ####
+#### libstb-hal needs to be built with bitbake libstb-hal-local before
+####
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 "
@@ -38,8 +40,15 @@ inherit autotools pkgconfig
 
 include neutrino-mp.inc
 
+EXTRA_OECONF += " \
+	--with-stb-hal-includes=${WORKDIR}/hal-build/dest/usr/include/libstb-hal \
+	--with-stb-hal-build=${WORKDIR}/hal-build \
+"
+
 do_compile () {
 	test -e version.h || touch version.h
+	# force relinking in case of rebuilt libstb-hal
+	test ${WORKDIR}/hal-build/libstb-hal.la -nt ${B}/src/neutrino && rm -f ${B}/src/neutrino
 	# unset CFLAGS CXXFLAGS LDFLAGS
 	oe_runmake CFLAGS="${N_CFLAGS}" CXXFLAGS="${N_CXXFLAGS}" LDFLAGS="${N_LDFLAGS}"
 	# deliberately fail here, so that compile does not finish
