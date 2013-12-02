@@ -7,7 +7,7 @@ DESCRIPTION = "Library to abstract STB hardware."
 HOMEPAGE = "https://gitorious.org/neutrino-hd/libstb-hal"
 SECTION = "libs"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
+LIC_FILES_CHKSUM = "file://${THISDIR}/libstb-hal/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
 # hack: make sure we do not try to build on coolstream
 COMPATIBLE_MACHINE_coolstream = "none"
@@ -29,14 +29,15 @@ RDEPENDS_${PN} = "ffmpeg"
 
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r7"
+PR = "r8"
 
 PACKAGES_spark += "spark-fp"
 PACKAGES_spark7162 += "spark-fp"
 
 SRC_URI = " \
-            git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=git \
-            file://COPYING.GPL \
+	git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=git \
+	file://blank_480.mpg \
+	file://blank_576.mpg \
 "
 
 S = "${WORKDIR}/git"
@@ -66,11 +67,22 @@ EXTRA_OECONF_append_spark7162 += "${SPARK_GEN_EXTRA_OECONF}"
 EXTRA_OECONF_append_raspberrypi += "--with-boxtype=generic --with-boxmodel=raspi"
 EXTRA_OECONF_append_tripledragon += "--with-boxtype=tripledragon"
 
+do_install_append() {
+	install -d ${D}/${datadir}
+}
+
+do_install_append_tripledragon() {
+	install -D -m 0644 ${WORKDIR}/blank_576.mpg ${D}/${datadir}/tuxbox/blank_576.mpg
+	install -D -m 0644 ${WORKDIR}/blank_480.mpg ${D}/${datadir}/tuxbox/blank_480.mpg
+}
+
 FILES_${PN} = "\
 	${libdir}/* \
 	${bindir}/libstb-hal-test \
 	${bindir}/pic2m2v \
+	${datadir} \
 "
+
 FILES_spark_${PN} = "${bindir}/meta ${bindir}/eplayer3"
 FILES_spark7162_${PN} = "${bindir}/meta ${bindir}/eplayer3"
 
