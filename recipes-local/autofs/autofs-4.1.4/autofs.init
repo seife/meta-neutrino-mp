@@ -626,8 +626,8 @@ reload)
 	rm -f $TMP1 $TMP2
 	;;
 force-reload|restart)
-	stop
-	start
+	$0 stop
+	$0 start
 	;;
 status)
 	status

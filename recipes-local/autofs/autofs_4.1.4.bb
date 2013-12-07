@@ -2,7 +2,7 @@ SUMMARY = "kernel-based automounter for Linux"
 SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
-PR = "r10.4"
+PR = "r11"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/daemons/autofs/v4/${BP}.tar.gz \
            file://020_auto_net_path_sortlocale_mountoptions.patch \
@@ -56,7 +56,13 @@ do_configure_prepend () {
         if [ ! -e acinclude.m4 ]; then
                 cp aclocal.m4 acinclude.m4
         fi
+	# todo: check if these only are correct with busybox...
+	export ac_cv_path_MOUNT=/bin/mount
+	export ac_cv_path_UMOUNT=/bin/umount
+	export ac_cv_path_E2FSCK=/sbin/fsck.ext2
+	export ac_cv_path_E3FSCK=/sbin/fsck.ext3
 }
+
 do_install () {
         oe_runmake 'INSTALLROOT=${D}' install
         install -d ${D}${sysconfdir}/default
@@ -68,9 +74,19 @@ do_install () {
         install -m 644 ${WORKDIR}/auto.network ${D}${sysconfdir}/auto.network
         install -d ${D}${sysconfdir}/default/volatiles
         install -m 644 ${WORKDIR}/volatiles.99_autofs ${D}${sysconfdir}/default/volatiles/99_autofs
+	rmdir ${D}/var/run/autofs ${D}/var/run
 }
 
+CONFFILES_${PN} = " \
+	${sysconfdir}/auto.hotplug \
+	${sysconfdir}/auto.master \
+	${sysconfdir}/auto.network \
+	${sysconfdir}/default/* \
+"
+
 RDEPENDS_${PN} = "procps"
+# TODO: what if it is built in instead of module?
+RDEPENDS_${PN} += "kernel-module-autofs4"
 
 INITSCRIPT_NAME = "autofs"
 INITSCRIPT_PARAMS = "defaults"
