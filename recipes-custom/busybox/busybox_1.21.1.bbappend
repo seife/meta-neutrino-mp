@@ -38,7 +38,20 @@ do_install_append() {
 
 pkg_prerm_${PN}-telnetd () {
 #!/bin/sh
-# do not stop telnetd on update, or update is impossible
+# do not stop telnetd on update, or uninstall is impossible
 # while being logged in via telnet
 exit 0
+}
+
+pkg_postinst_${PN}-telnetd() {
+#!/bin/sh
+if test "x$D" != "x"; then
+	OPT="-r $D"
+fi
+if type update-rc.d >/dev/null 2>/dev/null; then
+	update-rc.d $OPT telnetd.busybox defaults
+	# "restart" as done by "update-rc.d -s" is deadly for existing connections
+	test "x$D" = "x" && /etc/init.d/telnetd.busybox start
+fi
+exit
 }
