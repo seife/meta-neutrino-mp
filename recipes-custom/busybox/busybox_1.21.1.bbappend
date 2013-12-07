@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-PRINC := "${@int(PRINC) + 1}"
+PRINC := "${@int(PRINC) + 2}"
 
 SRC_URI += " \
 	file://neutrino-busybox.cfg \
@@ -31,7 +31,14 @@ do_install_append() {
 		install -m 0755 ${WORKDIR}/telnetd.busybox ${D}${sysconfdir}/init.d/telnetd.${BPN}
 	fi
 	if grep "CONFIG_UDHCPC=y" ${B}/.config; then
-		# the directory was created alreadb before in do_install()
+		# the directory was created already before in do_install()
 		install -m 0755 ${WORKDIR}/hostname.script ${D}${sysconfdir}/udhcpc.d/51hostname
 	fi
+}
+
+pkg_prerm_${PN}-telnetd () {
+#!/bin/sh
+# do not stop telnetd on update, or update is impossible
+# while being logged in via telnet
+exit 0
 }
