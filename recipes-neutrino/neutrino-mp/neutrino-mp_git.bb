@@ -39,16 +39,15 @@ RDEPENDS_${PN}_append_tripledragon += "kernel-module-td-dvb-frontend"
 
 RCONFLICTS_${PN} = "neutrino-hd2"
 
-#SRCREV = "c7a4927b53f674323931471b05b83a455a0e6506"
-#SRCREV = "e92afd2b420f2e53cf45a79b29b9898df406fe2b"
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r20"
+PR = "r21"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
 	file://neutrino.init \
 	file://timezone.xml \
+	file://custom-poweroff.init \
 	file://COPYING.GPL \
 "
 
@@ -62,6 +61,11 @@ INITSCRIPT_PARAMS_${PN} = "start 99 5 . stop 20 0 1 2 3 4 6 ."
 
 include neutrino-mp.inc
 
+do_configure_prepend() {
+	INSTALL="`which install` -p"
+	export INSTALL
+}
+
 do_compile () {
 	# unset CFLAGS CXXFLAGS LDFLAGS
 	oe_runmake CFLAGS="${N_CFLAGS}" CXXFLAGS="${N_CXXFLAGS}" LDFLAGS="${N_LDFLAGS}"
@@ -71,6 +75,7 @@ do_compile () {
 do_install_prepend () {
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 755 ${WORKDIR}/neutrino.init ${D}/${sysconfdir}/init.d/neutrino
+	install -m 755 ${WORKDIR}/custom-poweroff.init ${D}/${sysconfdir}/init.d/custom-poweroff
 	install -m 644 ${WORKDIR}/timezone.xml ${D}/${sysconfdir}/timezone.xml
 	install -d ${D}/share/tuxbox/neutrino/httpd-y
 	install -d ${D}/share/tuxbox/neutrino/httpd
@@ -83,6 +88,7 @@ do_install_prepend () {
 	echo "creator=${MAINTAINER}"             >> ${D}/.version 
 	echo "imagename=Neutrino-MP"             >> ${D}/.version 
 	echo "homepage=${HOMEPAGE}"              >> ${D}/.version 
+	update-rc.d -r ${D} custom-poweroff start 89 0 .
 }
 
 FILES_${PN} += "\

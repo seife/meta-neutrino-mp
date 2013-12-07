@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# for platforms without proper hwclock support, this script is called
+# before "halt" and can use an alternative method of shutting down
+#
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# just to make sure we don't accidentally switch off the box
+if test x"$1" != xstop; then
+	echo "$0 called without stop parameter!"
+	exit 0
+fi
+
+test -e /tmp/.timer || exit 0
+
+# TODO: more platforms
+# coolstream custom poweroff binary
+if type uncooloff > /dev/null; then
+	PARAM=`cat /tmp/.timer`
+	# this is necessary because the kernel does not do it
+	# when shut down via uncooloff
+	echo "shutting down harddrives"
+	hdparm -y /dev/sd*[^0-9] 2>/dev/null # only sda, not sda1
+	echo "calling 'uncooloff $PARAM'"
+	uncooloff $PARAM
+	# we should not come here :-)
+fi
+
+# fallthrough, so that regular "halt" script will kick in
+exit 0
