@@ -41,7 +41,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r21"
+PR = "r22"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \

@@ -15,6 +15,7 @@ EXTRA_OECONF = " \
 	--with-tremor \
 	--disable-upnp \
 	--enable-giflib \
+	--enable-mdev \
 	--with-stb-hal-includes=${STAGING_DIR_HOST}/usr/include/libstb-hal \
 "
 
