@@ -4,11 +4,20 @@ include recipes-core/images/core-image-minimal.bb
 # 488M + 20MB /boot +4MB alignment = 512M
 IMAGE_ROOTFS_SIZE = "499712"
 
+IMAGE_DEPENDS += " \
+	e2fsprogs \
+"
+
 IMAGE_INSTALL += " \
 	neutrino-mp \
 	strace \
 	procps \
 	image-config \
+	e2fsprogs-mke2fs \
+	e2fsprogs-e2fsck \
+	e2fsprogs-tune2fs \
+	djmount \
+	autofs \
 "
 
 # Tripledragon Kernel is too old for udev
