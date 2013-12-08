@@ -26,6 +26,7 @@ start_neutrino() {
 	[ x$NEUTRINO_QUIET = xyes ] && QUIET=">/dev/null 2>&1"
 	# coolstream: work around driver problems
 	type -p uncoolinit > /dev/null && uncoolinit $QUIET
+	rm -f /tmp/.halt /tmp/.reboot /tmp/.timer /dev/shm/.timer
 	start-stop-daemon -S -p /var/run/neutrino.pid -m -o -x neutrino $QUIET
 	RET=$?
 	echo "Neutrino exited with exit code $RET"
@@ -42,6 +43,8 @@ start_neutrino() {
 		$MESSAGE "shutting down..."
 		poweroff
 	fi
+	# this will survive the unmount of tmpfs
+	[ -e /tmp/.timer ] && cp /tmp/.timer /dev/shm/
 }
 
 case $1 in
