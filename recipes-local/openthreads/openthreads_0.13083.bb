@@ -12,8 +12,8 @@ SRC_URI = "https://gitorious.org/neutrino-hd/buildsystem-cs/raw/archive-patches/
            file://002-omit-policy-cmp0014.patch;pnum=0 \
 "
 
-SRC_URI[md5sum] = "a77c23a233f6471abe73bfa8c026ee39"
-SRC_URI[sha256sum] = "a68aaaf3c43a7af5f324e68b0a4e6a7b3e7e2109a0fd6db19f86e642dea5bc4a"
+SRC_URI[md5sum] = "e3e1853207acbc65a9f4f008851125fe"
+SRC_URI[sha256sum] = "a745a62950689b9cf39c8213047a8f0403ebd82c488be301578d7b6906615184"
 
 S = "${WORKDIR}/OpenThreads-svn-13083/"
 
