@@ -1,0 +1,15 @@
+###
+### do not change this file, create your own in /etc/profile.d/ instead
+###
+
+# useful aliases
+alias l='ls -al --color'
+alias ll='ls -l --color'
+alias dir='ls -lA --color'
+alias ..='cd ..'
+# alias reboot='touch /tmp/.reboot; /sbin/reboot'
+
+# aliases for old farts who can't remember new names :)
+alias fcp='flashcp -v'
+alias eraseall=flash_eraseall
+
