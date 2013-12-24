@@ -4,6 +4,9 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 PR = "r11"
 
+# for kernel .config
+DEPENDS += "virtual/kernel"
+
 SRC_URI = "${KERNELORG_MIRROR}/linux/daemons/autofs/v4/${BP}.tar.gz \
            file://020_auto_net_path_sortlocale_mountoptions.patch \
            file://037_let_debian_rules_decide_on_CFLAGS.patch \
@@ -84,9 +87,16 @@ CONFFILES_${PN} = " \
 	${sysconfdir}/default/* \
 "
 
+# function to find out if we need kernel-module-autofs4
+# todo: check if the "virtual/kernel" dep is enough to make sure the config is present.
+def autofs4_module_dep(bb, d):
+    for line in open(d.getVar('STAGING_DIR_HOST', True) + "/usr/src/kernel/.config"):
+        if "CONFIG_AUTOFS4_FS=m" in line:
+            return "kernel-module-autofs4"
+    return ""
+
 RDEPENDS_${PN} = "procps"
-# TODO: what if it is built in instead of module?
-RDEPENDS_${PN} += "kernel-module-autofs4"
+RDEPENDS_${PN} += "${@autofs4_module_dep(bb, d)}"
 
 INITSCRIPT_NAME = "autofs"
 INITSCRIPT_PARAMS = "defaults"
