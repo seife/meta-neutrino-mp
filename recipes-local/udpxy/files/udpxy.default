@@ -1,0 +1,7 @@
+# config file for udpxy
+#
+# PORT to listen on; defaults to 4022 if not set
+#UDPXY_PORT=4022
+#
+# specify extra options
+UDPXY_OPTIONS=""

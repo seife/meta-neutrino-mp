@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# OE / yocto init script for udpxy
+# (C) 2013 Stefan Seyfried, License: WTFPLv2
+#
+. /etc/default/udpxy
+
+# default value
+: ${UDPXY_PORT:=4022}
+
+PIDFILE=/var/run/udpxy${UDPXY_PORT}.pid
+case $1 in
+	start)
+		start-stop-daemon -S -x /usr/bin/udpxy -p $PIDFILE -- -p $UDPXY_PORT $UDPXY_OPTIONS
+		;;
+	stop)
+		start-stop-daemon -K -x /usr/bin/udpxy -p $PIDFILE
+		;;
+	restart)
+		$0 stop;
+		$0 start;
+		;;
+esac
