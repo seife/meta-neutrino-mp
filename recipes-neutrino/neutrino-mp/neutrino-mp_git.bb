@@ -29,6 +29,7 @@ DEPENDS += " \
 
 RDEPENDS_${PN} += " \
 	tzdata \
+	luaposix \
 "
 
 # maybe this should rather be in the image dependencies? it is not needed for building...
@@ -41,7 +42,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r22"
+PR = "r23"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
@@ -77,10 +78,6 @@ do_install_prepend () {
 	install -m 755 ${WORKDIR}/neutrino.init ${D}/${sysconfdir}/init.d/neutrino
 	install -m 755 ${WORKDIR}/custom-poweroff.init ${D}/${sysconfdir}/init.d/custom-poweroff
 	install -m 644 ${WORKDIR}/timezone.xml ${D}/${sysconfdir}/timezone.xml
-	install -d ${D}/share/tuxbox/neutrino/httpd-y
-	install -d ${D}/share/tuxbox/neutrino/httpd
-	install -d ${D}/share/fonts
-	install -d ${D}/share/tuxbox/neutrino/icons
 	install -d ${D}/var/cache
 	install -d ${D}/var/tuxbox/config/
 	install -d ${D}/var/tuxbox/plugins/
@@ -89,6 +86,13 @@ do_install_prepend () {
 	echo "imagename=Neutrino-MP"             >> ${D}/.version 
 	echo "homepage=${HOMEPAGE}"              >> ${D}/.version 
 	update-rc.d -r ${D} custom-poweroff start 89 0 .
+}
+
+# compatibility with binaries hand-built with --prefix=
+do_install_append() {
+	install -d ${D}/share/
+	ln -s ../usr/share/tuxbox ${D}/share/
+	ln -s ../usr/share/fonts  ${D}/share/
 }
 
 FILES_${PN} += "\
@@ -101,8 +105,6 @@ FILES_${PN} += "\
 	/usr/share/tuxbox/neutrino \
 	/usr/share/iso-codes \
 	/usr/share/fonts \
-	/share/tuxbox/neutrino/httpd-y \
-	/share/tuxbox/neutrino/httpd \
 	/share/fonts \
 	/share/tuxbox \
 	/var/cache \
