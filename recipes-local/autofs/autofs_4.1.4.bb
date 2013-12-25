@@ -90,6 +90,8 @@ CONFFILES_${PN} = " \
 # function to find out if we need kernel-module-autofs4
 # todo: check if the "virtual/kernel" dep is enough to make sure the config is present.
 def autofs4_module_dep(bb, d):
+    if not os.path.isfile(d.getVar('STAGING_DIR_HOST', True) + "/usr/src/kernel/.config"):
+        return ""
     for line in open(d.getVar('STAGING_DIR_HOST', True) + "/usr/src/kernel/.config"):
         if "CONFIG_AUTOFS4_FS=m" in line:
             return "kernel-module-autofs4"
