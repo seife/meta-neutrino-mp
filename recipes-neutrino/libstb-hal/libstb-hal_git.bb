@@ -11,6 +11,9 @@ LIC_FILES_CHKSUM = "file://${THISDIR}/libstb-hal/COPYING.GPL;md5=751419260aa9544
 
 # hack: make sure we do not try to build on coolstream
 COMPATIBLE_MACHINE_coolstream = "none"
+#
+# this stuff really is machine specific, not CPU specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "\
 	openthreads \
