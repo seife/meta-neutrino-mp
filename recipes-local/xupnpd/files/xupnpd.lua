@@ -61,7 +61,7 @@ cfg.sort_files=false
 cfg.name=io.popen("uname -n"):read("*l")..'-xupnpd'
 
 -- static device UUID, '60bd2fb3-dabe-cb14-c766-0e319b54c29a' for example or nil
-cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c29a'
+--cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c29a'
 
 -- max url cache size
 cfg.cache_size=8
@@ -79,8 +79,9 @@ cfg.playlists_update_interval=0
 -- playlist (m3u file path or path with alias
 playlist=
 {
-   { '/media/sda1/movies', 'Local Record Files' },
-   { '/media/sda1/pictures', 'Local Picture Files' },
+   -- this is a hack and will break if the glob matches multiple directories...
+   { io.popen("echo /media/*/movies"):read("*l"), 'Local Record Files' },
+   { io.popen("echo /media/*/pictures"):read("*l"), 'Local Picture Files' },
 --    { './playlists/mozhay.m3u', 'Mozhay.tv' },
 --    { './localmedia', 'Local Media Files' }
 --    { './private', 'Private Media Files', '127.0.0.1;192.168.1.1' }  -- only for 127.0.0.1 and 192.168.1.1

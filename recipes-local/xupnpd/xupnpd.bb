@@ -14,6 +14,7 @@ SRC_URI = "\
 "
 
 PV = "0.0+svn${SRCREV}"
+PR = "r1"
 S = "${WORKDIR}/xupnpd/src"
 
 inherit base update-rc.d
