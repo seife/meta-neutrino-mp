@@ -1,5 +1,5 @@
 ##
-## TODO: spark rules are not tested
+## TODO: spark rules are only build tested
 ##
 
 SUMMARY = "Library to abstract STB hardware. Supports Tripledragon, AZbox ME, Fulan Spark boxes as well as generic PC hardware and the Raspberry Pi right now."
@@ -21,7 +21,6 @@ DEPENDS = "\
 PROVIDES += "virtual/stb-hal-libs"
 
 DEPENDS_append_spark = "tdt-driver libass"
-DEPENDS_append_spark7162 = "tdt-driver libass"
 DEPENDS_append_raspberrypi = "virtual/egl"
 DEPENDS_append_tripledragon = "directfb triple-sdk"
 
@@ -29,10 +28,12 @@ RDEPENDS_${PN} = "ffmpeg"
 
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
-PR = "r8"
+PR = "r9"
 
-PACKAGES_spark += "spark-fp"
-PACKAGES_spark7162 += "spark-fp"
+# prepend, or it will end up in -bin package...
+PACKAGES_prepend_spark = "spark-fp "
+# libstb-hal-bin package for testing binaries etc.
+PACKAGES += "${PN}-bin"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=git \
@@ -46,10 +47,7 @@ inherit autotools pkgconfig
 
 # CFLAGS_append = " -Wall -W -Wshadow -g -O2 -fno-strict-aliasing -rdynamic -DNEW_LIBCURL"
 
-SPARK_GEN_CFLAGS = "-funsigned-char"
-
-CFLAGS_spark += "${SPARK_GEN_CFLAGS} "
-CFLAGS_spark7162 += "${SPARK_GEN_CFLAGS} "
+CFLAGS_spark += "-funsigned-char"
 CPPFLAGS_tripledragon += "-I${STAGING_DIR_HOST}/usr/include/hardware"
 
 LDFLAGS = " -Wl,-rpath-link,${STAGING_DIR_HOST}/usr/lib -L${STAGING_DIR_HOST}/usr/lib"
@@ -60,10 +58,7 @@ EXTRA_OECONF += "\
 	--enable-shared \
 "
 
-SPARK_GEN_EXTRA_OECONF = " --with-boxtype=spark "
-
-EXTRA_OECONF_append_spark += "${SPARK_GEN_EXTRA_OECONF}"
-EXTRA_OECONF_append_spark7162 += "${SPARK_GEN_EXTRA_OECONF}"
+EXTRA_OECONF_append_spark += "--with-boxtype=spark"
 EXTRA_OECONF_append_raspberrypi += "--with-boxtype=generic --with-boxmodel=raspi"
 EXTRA_OECONF_append_tripledragon += "--with-boxtype=tripledragon"
 
@@ -76,15 +71,13 @@ do_install_append_tripledragon() {
 	install -D -m 0644 ${WORKDIR}/blank_480.mpg ${D}/${datadir}/tuxbox/blank_480.mpg
 }
 
+# pic2m2v is included in lib package, because it is always needed,
+# libstb-hal-bin contains all other binaries, which are rather for testing only
 FILES_${PN} = "\
 	${libdir}/* \
-	${bindir}/libstb-hal-test \
 	${bindir}/pic2m2v \
 	${datadir} \
 "
-
-FILES_spark_${PN} = "${bindir}/meta ${bindir}/eplayer3"
-FILES_spark7162_${PN} = "${bindir}/meta ${bindir}/eplayer3"
 
 FILES_${PN}-dev += "${includedir}/libstb-hal/*"
 
