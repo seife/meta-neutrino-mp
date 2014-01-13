@@ -141,7 +141,8 @@ function cst_sendurl(cst_url,range)
 
 	i,j,id = string.find(cst_url,".*id=(.+)")
 	local surl = baseurl.."/control/standby"
-	local standby = cst_read_url(surl)
+	-- local standby = cst_read_url(surl)
+	local standby = nil -- no longer needed
 
 	if standby then
 		cst_debug(0, "standby="..standby)
