@@ -9,6 +9,7 @@ PID=/var/run/xupnpd.pid
 case "$1" in
 	start)
 		printf "starting xupnpd daemon: "
+		start-stop-daemon -K -q -t $PID -x $BIN || rm -f $PID
 		if start-stop-daemon -q -S -p $PID -x $BIN; then
 			echo "done."
 		else
@@ -31,6 +32,7 @@ case "$1" in
 		else
 			echo "not running."
 		fi
+		rm -f /tmp/xupnpd-feeds/*
 		# never fail on stop, because that would break prerm package scripts.
 		;;
 	restart)
