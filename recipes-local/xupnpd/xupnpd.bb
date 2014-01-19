@@ -4,9 +4,7 @@ HOMEPAGE = "http://xupnpd.org"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
-# depends or only rdepends on luaposix?...
-DEPENDS += "lua5.2 luaposix (>= 29)"
-RDEPENDS_${PN} += "luaposix (>= 29)"
+DEPENDS += "lua5.2"
 SRCREV = "392"
 SRC_URI = "\
 	svn://tsdemuxer.googlecode.com/svn/trunk;protocol=http;module=xupnpd \

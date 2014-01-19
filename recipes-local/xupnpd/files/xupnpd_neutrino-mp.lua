@@ -7,16 +7,46 @@
 
 -- flag to test as plain script, without xupnpd - cfg not defined in this case
 local cst_test =  false
-local p = require "posix"
--- is this needed?
-p.signal(p.SIGPIPE, function() print("pipe") end)
 
 if not cfg then
 cfg={}
 cfg.tmp_path='/tmp/'
 cfg.feeds_path='/tmp/'
 cfg.debug=1
+cfg.neutrinomp_bouquets_count = 0
 cst_test = true
+-- primitive http get function
+function plugin_download(url)
+	local p = require "posix"
+	local i, j, host, path = string.find(url, "http://([^/]+)(/.+)")
+	-- print("urlget host:"..host.." path:"..path)
+	local res, err = p.getaddrinfo(host, "http", { family = p.AF_INET, socktype = p.SOCK_STREAM })
+	if not res then
+		cst_debug(0, "urlget getaddrinfo: "..err)
+		return "" -- or better nil?
+	end
+	local fd = p.socket(p.AF_INET, p.SOCK_STREAM, 0)
+	local ok, err, e = p.connect(fd, res[1])
+	if err then
+		cst_debug(0, "urlget connect: "..err)
+		return ""
+	end
+	p.send(fd, "GET "..path.." HTTP/1.0\r\nHost: "..host.."\r\n\r\n")
+	local data = {}
+	while true do
+		local b = p.recv(fd, 1024)
+		if not b or #b == 0 then
+			break
+		end
+		table.insert(data, b)
+	end
+	p.close(fd)
+	data = table.concat(data)
+	local headers, body
+	i, j, headers, body = string.find(data, "^(.-\r\n)\r\n(.*)")
+	return body
+end
+
 end
 
 function cst_debug(level, msg)
@@ -27,6 +57,7 @@ end
 
 function get_bouquets(response)
 	local btable={}
+	local count = 0
 	for string in response:gmatch("[^\r\n]+") do
 		cst_debug(1, "########## bouquet="..string)
 		local num = string.match(string, "%d+");
@@ -35,8 +66,13 @@ function get_bouquets(response)
 			local name = string.sub(string, len+1);
 			btable[num] = name
 			cst_debug(1, "num="..num.." name="..btable[num]);
+			count = count + 1
 		end
-		--break; -- one bouquet
+		if cfg.neutrinomp_bouquets_count and cfg.neutrinomp_bouquets_count > 0 then
+			if cfg.neutrinomp_bouquets_count <= count then
+				break
+			end
+		end
 	end
 	return btable
 end
@@ -75,37 +111,6 @@ local burl = "getbouquets?fav=true"
 -- with epg
 local curl = "getbouquet?epg=true&bouquet="
 
--- primitive http get function
-function urlget(url)
-	local i, j, host, path = string.find(url, "http://([^/]+)(/.+)")
-	-- print("urlget host:"..host.." path:"..path)
-	local res, err = p.getaddrinfo(host, "http", { family = p.AF_INET, socktype = p.SOCK_STREAM })
-	if not res then
-		cst_debug(0, "urlget getaddrinfo: "..err)
-		return "" -- or better nil?
-	end
-	local fd = p.socket(p.AF_INET, p.SOCK_STREAM, 0)
-	local ok, err, e = p.connect(fd, res[1])
-	if err then
-		cst_debug(0, "urlget connect: "..err)
-		return ""
-	end
-	p.send(fd, "GET "..path.." HTTP/1.0\r\nHost: "..host.."\r\n\r\n")
-	local data = {}
-	while true do
-		local b = p.recv(fd, 1024)
-		if not b or #b == 0 then
-			break
-		end
-		table.insert(data, b)
-	end
-	p.close(fd)
-	data = table.concat(data)
-	local headers, body
-	i, j, headers, body = string.find(data, "^(.-\r\n)\r\n(.*)")
-	return body
-end
-
 function neutrinomp_updatefeed(feed,friendly_name)
 	local rc=false
 	local feedspath = cfg.feeds_path
@@ -114,8 +119,8 @@ function neutrinomp_updatefeed(feed,friendly_name)
 	end
 	local ctrl_url = 'http://'..feed..'/control/'
 
-	cst_debug(0, "urlget("..ctrl_url..burl..")")
-	local bouquetsfile = urlget(ctrl_url..burl)
+	cst_debug(0, "plugin_download("..ctrl_url..burl..")")
+	local bouquetsfile = plugin_download(ctrl_url..burl)
 	local bouquets = get_bouquets(bouquetsfile)
 
 	if not bouquets then
@@ -126,8 +131,8 @@ function neutrinomp_updatefeed(feed,friendly_name)
 	for bindex,bouquett in pairs(bouquets) do
 		local cindex
 		local channelt = {}
-		cst_debug(0,"urlget("..ctrl_url..curl..bindex..")")
-		local xmlbouquetfile = urlget(ctrl_url..curl..bindex)
+		cst_debug(0,"plugin_download("..ctrl_url..curl..bindex..")")
+		local xmlbouquetfile = plugin_download(ctrl_url..curl..bindex)
 		local bouquet = get_channels(xmlbouquetfile)
 		if bouquet then
 			local m3ufilename = cfg.tmp_path.."nmp_"..friendly_name.."_bouquet_"..bindex..".m3u"
@@ -156,7 +161,7 @@ function sendurl(url,range)
 	i,j,id = string.find(url, ".*id=(.+)")
 	-- zap to channel
 	local zap = baseurl.."/control/zapto?"..id;
-	urlget(zap)
+	plugin_download(zap)
 
 	if not cst_test then
 		plugin_sendurl(url, url, range)
@@ -175,4 +180,9 @@ plugins.neutrinomp.name = "Neutrino MP"
 plugins.neutrinomp.desc = "IP address (example: <i>192.168.0.1</i>)"
 plugins.neutrinomp.updatefeed = neutrinomp_updatefeed
 plugins.neutrinomp.sendurl = sendurl
+plugins.neutrinomp.ui_config_vars =
+{
+    { "input",  "neutrinomp_bouquets_count", "int" }
+}
+
 end
