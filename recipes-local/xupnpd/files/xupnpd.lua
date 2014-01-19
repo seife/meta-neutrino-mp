@@ -101,7 +101,7 @@ feeds=
 --    { 'gametrailers',   'ps3',                   'GT - PS3' },
 --    { 'giantbomb',      'all',                  'GiantBomb - All' },
 --    { 'dreambox',       'http://192.168.0.1:8001/','Dreambox1' },
-   { 'coolstream',       'localhost', 'Neutrino' },
+   { 'neutrinomp',       'localhost', 'Neutrino' },
 --   { 'coolstream',       '172.16.1.10', 'NEO' },
 }
 
