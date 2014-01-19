@@ -1,0 +1,27 @@
+From 027ee017d64d6447f01b90fda7f48929ac288dea Mon Sep 17 00:00:00 2001
+From: Stefan Seyfried <seife@tuxbox-git.slipkontur.de>
+Date: Sun, 19 Jan 2014 15:11:12 +0100
+Subject: [PATCH 1/2] ui: add Neutrino MP config controls
+
+---
+ ui/ui_config.html | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/ui/ui_config.html b/ui/ui_config.html
+index 784f27e..90f193b 100644
+--- a/ui/ui_config.html
++++ b/ui/ui_config.html
+@@ -101,6 +101,10 @@
+ <div class="span4">GameTrailers maximum videos:</div><input type=text class="span4" name=gametrailers_video_count id=gametrailers_video_count>
+ </div>
+ 
++<div class="controls controls-row">
++<div class="span4">Neutrino MP bouquets (0 for all):</div><input type=text class="span4" name=neutrinomp_bouquets_count id=neutrinomp_bouquets_count>
++</div>
++
+ <hr/>
+ 
+ <h4>Common (restart needed)</h4>
+-- 
+1.8.4
+

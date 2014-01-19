@@ -1,0 +1,25 @@
+From 776efa07b1acbd86751efc3330b19c0a1f7f6be3 Mon Sep 17 00:00:00 2001
+From: Stefan Seyfried <seife@tuxbox-git.slipkontur.de>
+Date: Sun, 19 Jan 2014 15:12:11 +0100
+Subject: [PATCH 2/2] ui_restart: fix xupnpd install path
+
+---
+ ui/xupnpd_ui.lua | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ui/xupnpd_ui.lua b/ui/xupnpd_ui.lua
+index 2f39a7f..53c3774 100644
+--- a/ui/xupnpd_ui.lua
++++ b/ui/xupnpd_ui.lua
+@@ -529,7 +529,7 @@ function ui_api_call(args)
+ end
+ 
+ function ui_restart()
+-    if core.restart(cfg.pid_file,"./xupnpd") then http.send('<h3>Attempt to restart...</h3>') else http.send('<h3>Unable to restart.</h3>') end
++    if core.restart(cfg.pid_file,"/usr/bin/xupnpd") then http.send('<h3>Attempt to restart...</h3>') else http.send('<h3>Unable to restart.</h3>') end
+ 
+     http.send('<br/><form method=get action="/ui"><input class="btn btn-primary" type=submit value=OK></form>')
+ 
+-- 
+1.8.4
+
