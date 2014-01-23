@@ -1,8 +1,10 @@
 DESCRIPTION = "Lua is a powerful light-weight programming language designed \
 for extending applications."
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://doc/readme.html;beginline=362;endline=396;md5=ffcafb3f03e29955d3f1fdfd5a4a72e7"
+LIC_FILES_CHKSUM = "file://doc/readme.html;beginline=365;endline=399;md5=ad3069a42853ac3efd7d379d87f6088b"
 HOMEPAGE = "http://www.lua.org/"
+
+PV = "5.2.3"
 
 # readline pulls in a heap of runtime dependencies...
 DEPENDS += "readline"
@@ -34,12 +36,12 @@ do_install () {
 		'INSTALL_SHARE=${D}${datadir}/lua' \
 		install
 	install -d ${D}${libdir}/pkgconfig
-	install -m 0644 ${WORKDIR}/lua5.2.pc ${D}${libdir}/pkgconfig/lua5.2.pc
+	sed "s/^Version:.*/Version: ${PV}/" ${WORKDIR}/lua5.2.pc >  ${D}${libdir}/pkgconfig/lua5.2.pc
 }
 BBCLASSEXTEND = "native"
 
 FILES_${PN} += "${libdir}/lua"
 FILES_${PN} += "${datadir}/lua"
 
-SRC_URI[md5sum] = "ae08f641b45d737d12d30291a5e5f6e3"
-SRC_URI[sha256sum] = "64304da87976133196f9e4c15250b70f444467b6ed80d7cfd7b3b982b5177be5"
+SRC_URI[md5sum] = "dc7f94ec6ff15c985d2d6ad0f1b35654"
+SRC_URI[sha256sum] = "13c2fb97961381f7d06d5b5cea55b743c163800896fd5c5e2356201d3619002d"
