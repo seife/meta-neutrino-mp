@@ -1,0 +1,26 @@
+From f38375babb6b5b484b6ee589ce3b5c6bd882a009 Mon Sep 17 00:00:00 2001
+From: Hendrik Leppkes <h.leppkes@gmail.com>
+Date: Fri, 25 Oct 2013 16:26:11 +0200
+Subject: [PATCH 3/3] Don't abort demuxing if the disc looks encrypted
+
+Even if the disc is still encrypted, we'll fail later on anyway, and this
+allows playback of discs which were decrypted but the marker not cleared.
+---
+ src/libbluray/bluray.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/libbluray/bluray.c b/src/libbluray/bluray.c
+index 5fe5c53..2b113db 100644
+--- a/src/libbluray/bluray.c
++++ b/src/libbluray/bluray.c
+@@ -608,7 +608,6 @@ static int _read_block(BLURAY *bd, BD_STREAM *st, uint8_t *buf)
+                         BD_DEBUG(DBG_BLURAY | DBG_CRIT,
+                                  "TP header copy permission indicator != 0, unit is still encrypted?\n");
+                         _queue_event(bd, BD_EVENT_ENCRYPTED, BD_ERROR_AACS);
+-                        return -1;
+                     }
+                 }
+ 
+-- 
+1.8.5.2
+

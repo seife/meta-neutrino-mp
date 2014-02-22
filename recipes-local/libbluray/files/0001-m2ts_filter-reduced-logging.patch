@@ -1,0 +1,25 @@
+From 39b958025c393c73556bee54595607408e264d0a Mon Sep 17 00:00:00 2001
+From: hpi1 <hpi1@anonymous.org>
+Date: Mon, 27 Jan 2014 21:13:15 +0200
+Subject: [PATCH] m2ts_filter: reduced logging
+
+---
+ src/libbluray/decoders/m2ts_filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libbluray/decoders/m2ts_filter.c b/src/libbluray/decoders/m2ts_filter.c
+index e92557a..59be42c 100644
+--- a/src/libbluray/decoders/m2ts_filter.c
++++ b/src/libbluray/decoders/m2ts_filter.c
+@@ -30,7 +30,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#define M2TS_TRACE(...) BD_DEBUG(DBG_CRIT,__VA_ARGS__)
++#define M2TS_TRACE(...) BD_DEBUG(DBG_STREAM,__VA_ARGS__)
+ //#define M2TS_TRACE(...) do {} while(0)
+ 
+ /*
+-- 
+1.8.5.2
+

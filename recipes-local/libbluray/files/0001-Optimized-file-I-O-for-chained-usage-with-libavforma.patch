@@ -1,0 +1,112 @@
+From 53d39d4e3d72af46b82e2ef6ceffdefa68045c5c Mon Sep 17 00:00:00 2001
+From: Hendrik Leppkes <h.leppkes@gmail.com>
+Date: Thu, 17 Mar 2011 17:22:00 +0100
+Subject: [PATCH 1/3] Optimized file I/O for chained usage with libavformat
+
+---
+ src/file/dir_win32.c   |  4 ++--
+ src/file/file_posix.c  |  6 ++++--
+ src/libbluray/bluray.c | 21 ++++++++++++++++++++-
+ src/libbluray/bluray.h | 10 ++++++++++
+ 4 files changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/src/file/dir_win32.c b/src/file/dir_win32.c
+index f2e8f1c..b76bf15 100644
+--- a/src/file/dir_win32.c
++++ b/src/file/dir_win32.c
+@@ -83,8 +83,8 @@ static BD_DIR_H *_dir_open_win32(const char* dirname)
+ 
+     dir->internal = priv;
+ 
+-    wchar_t wfilespec[MAX_PATH];
+-    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filespec, -1, wfilespec, MAX_PATH))
++    wchar_t wfilespec[4096];
++    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filespec, -1, wfilespec, 4096))
+         priv->handle = _wfindfirst(wfilespec, &priv->info);
+     else
+         priv->handle = -1;
+diff --git a/src/file/file_posix.c b/src/file/file_posix.c
+index 4bca744..485599d 100644
+--- a/src/file/file_posix.c
++++ b/src/file/file_posix.c
+@@ -113,13 +113,15 @@ static BD_FILE_H *file_open_linux(const char* filename, const char *mode)
+     file->eof = file_eof_linux;
+ 
+ #ifdef _WIN32
+-    wchar_t wfilename[MAX_PATH], wmode[8];
+-    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename, -1, wfilename, MAX_PATH) &&
++    wchar_t wfilename[4096], wmode[8];
++    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename, -1, wfilename, 4096) &&
+         MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, mode, -1, wmode, 8) &&
+         (fp = _wfopen(wfilename, wmode))) {
+ #else
+     if ((fp = fopen(filename, mode))) {
+ #endif
++        // Set file buffer
++        setvbuf(fp, NULL, _IOFBF, 6144 * 10);
+         file->internal = fp;
+ 
+         return file;
+diff --git a/src/libbluray/bluray.c b/src/libbluray/bluray.c
+index 4f6d3a3..d19872f 100644
+--- a/src/libbluray/bluray.c
++++ b/src/libbluray/bluray.c
+@@ -523,7 +523,7 @@ static int _open_m2ts(BLURAY *bd, BD_STREAM *st)
+ 
+     f_name = str_printf("%s" DIR_SEP "BDMV" DIR_SEP "STREAM" DIR_SEP "%s",
+                         bd->device_path, st->clip->name);
+-    st->fp = file_open(f_name, "rb");
++    st->fp = file_open(f_name, "rbS");
+     X_FREE(f_name);
+ 
+     st->clip_size = 0;
+@@ -1433,6 +1433,25 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick)
+     return bd->s_pos;
+ }
+ 
++int64_t bd_find_seek_point(BLURAY *bd, uint64_t tick)
++{
++  uint32_t clip_pkt, out_pkt;
++  NAV_CLIP *clip;
++
++  tick /= 2;
++
++  if (bd->title &&
++    tick < bd->title->duration) {
++
++      // Find the closest access unit to the requested position
++      clip = nav_time_search(bd->title, tick, &clip_pkt, &out_pkt);
++
++      return (int64_t)out_pkt * 192;
++  }
++
++  return bd->s_pos;
++}
++
+ uint64_t bd_tell_time(BLURAY *bd)
+ {
+     uint32_t clip_pkt = 0, out_pkt = 0, out_time = 0;
+diff --git a/src/libbluray/bluray.h b/src/libbluray/bluray.h
+index 10c8a09..828a74c 100644
+--- a/src/libbluray/bluray.h
++++ b/src/libbluray/bluray.h
+@@ -288,6 +288,16 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick);
+ 
+ /**
+  *
++ * Find the byte position to specific time in 90Khz ticks
++ *
++ * @param bd    BLURAY ojbect
++ * @param tick  tick count
++ * @return byte position
++ */
++int64_t bd_find_seek_point(BLURAY *bd, uint64_t tick);
++
++/**
++ *
+  *  Read from currently selected title file, decrypt if possible
+  *
+  * @param bd  BLURAY object
+-- 
+1.8.5.2
+

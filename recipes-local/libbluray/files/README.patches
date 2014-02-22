@@ -1,0 +1,4 @@
+0001-m2ts_filter-reduced-logging.patch is from git://git.videolan.org/libbluray.git master
+All other patches are from git://git.1f0.de/libbluray.git.
+
+They are needed, because the libcoolstream ffmpeg uses the functions provided  by them.
