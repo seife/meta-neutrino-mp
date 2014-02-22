@@ -22,7 +22,7 @@ EXTRA_FFCONF_armv7a = "--cpu=cortex-a8"
 EXTRA_FFCONF ?= ""
 
 #PACKAGECONFIG ??= "bzip2 x264 ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "bzip2"
 PACKAGECONFIG[jack] = "--enable-indev=jack,--disable-indev=jack,jack"
 PACKAGECONFIG[bzip2] = "--enable-bzlib,--disable-bzlib,bzip2"
 PACKAGECONFIG[schroedinger] = "--enable-libschroedinger,--disable-libschroedinger,schroedinger"
@@ -62,11 +62,87 @@ EXTRA_OECONF_append_raspberrypi = " \
 	--cpu=armv6 \
 "
 EXTRA_OECONF_append_coolstream = " \
+	--disable-runtime-cpudetect \
 	--arch=arm \
 	--cpu=armv6 \
+	--disable-neon \
+	--disable-vfp \
 	--disable-libtheora \
 	--disable-libvorbis \
+	--disable-decoders \
+	--enable-decoder=dca \
+	--enable-decoder=dvdsub \
+	--enable-decoder=dvbsub \
+	--enable-decoder=text \
+	--enable-decoder=srt \
+	--enable-decoder=subrip \
+	--enable-decoder=subviewer \
+	--enable-decoder=subviewer1 \
+	--enable-decoder=xsub \
+	--enable-decoder=pgssub \
+	--enable-decoder=mp3 \
+	--enable-decoder=flac \
+	--enable-decoder=vorbis \
+	--enable-decoder=aac \
+	--enable-decoder=mjpeg \
+	--enable-decoder=pcm_s16le \
+	--enable-decoder=pcm_s16le_planar \
+	--disable-parsers \
+	--enable-parser=aac \
+	--enable-parser=aac_latm \
+	--enable-parser=ac3 \
+	--enable-parser=dca \
+	--enable-parser=mpeg4video \
+	--enable-parser=mpegvideo \
+	--enable-parser=mpegaudio \
+	--enable-parser=h264 \
+	--enable-parser=vc1 \
+	--enable-parser=dvdsub \
+	--enable-parser=dvbsub \
+	--enable-parser=flac \
+	--enable-parser=vorbis \
+	--disable-demuxers \
+	--enable-demuxer=aac \
+	--enable-demuxer=ac3 \
+	--enable-demuxer=avi \
+	--enable-demuxer=mov \
+	--enable-demuxer=vc1 \
+	--enable-demuxer=mpegts \
+	--enable-demuxer=mpegtsraw \
+	--enable-demuxer=mpegps \
+	--enable-demuxer=mpegvideo \
+	--enable-demuxer=wav \
+	--enable-demuxer=pcm_s16be \
+	--enable-demuxer=mp3 \
+	--enable-demuxer=pcm_s16le \
+	--enable-demuxer=matroska \
+	--enable-demuxer=flv \
+	--enable-demuxer=rm \
+	--enable-demuxer=rtsp \
+	--enable-demuxer=hls \
+	--enable-demuxer=dts \
+	--enable-demuxer=wav \
+	--enable-demuxer=ogg \
+	--enable-demuxer=flac \
+	--enable-demuxer=srt \
+	--disable-encoders \
+	--disable-muxers \
+	--disable-filters \
+	--disable-protocols \
+	--enable-protocol=file \
+	--enable-protocol=http \
+	--enable-protocol=rtmp \
+	--enable-protocol=rtmpe \
+	--enable-protocol=rtmps \
+	--enable-protocol=rtmpte \
+	--enable-protocol=mmsh \
+	--enable-protocol=mmst \
 	--enable-protocol=bluray \
+	--enable-bsfs \
+	--disable-devices \
+	--enable-swresample \
+	--disable-postproc \
+	--disable-swscale \
 	--enable-libbluray \
 "
 # strip down ffmpeg for tripledragon: most of it is not useful here.
