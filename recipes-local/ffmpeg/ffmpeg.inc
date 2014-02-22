@@ -160,6 +160,7 @@ EXTRA_OECONF_append_tripledragon = " \
 	--enable-decoder=dvbsub --enable-demuxer=mpegps \
 	--enable-parser=mjpeg --enable-demuxer=mjpeg --enable-decoder=mjpeg \
 	--disable-bsfs --disable-network \
+	--enable-dct \
 "
 
 do_configure() {
