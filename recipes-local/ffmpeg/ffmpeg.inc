@@ -7,6 +7,7 @@ LICENSE_FLAGS = "commercial"
 ARM_INSTRUCTION_SET = "arm"
 
 DEPENDS = "zlib libogg libvorbis libtheora yasm-native"
+DEPENDS_append_coolstream = " libbluray"
 
 INC_PR = "r8"
 
@@ -65,6 +66,8 @@ EXTRA_OECONF_append_coolstream = " \
 	--cpu=armv6 \
 	--disable-libtheora \
 	--disable-libvorbis \
+	--enable-protocol=bluray \
+	--enable-libbluray \
 "
 # strip down ffmpeg for tripledragon: most of it is not useful here.
 # --arch=ppc4xx seems to still have a problem with the assembler...
