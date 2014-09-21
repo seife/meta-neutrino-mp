@@ -1,6 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-PRINC := "${@int(PRINC) + 2}"
+# PRINC is now deprecated...
+#PRINC := "${@int(PRINC) + 2}"
 
 SRC_URI += " \
 	file://neutrino-busybox.cfg \
@@ -8,7 +9,7 @@ SRC_URI += " \
 	file://hostname.script \
 "
 
-PACKAGES_prepend += "${PN}-inetd ${PN}-telnetd"
+PACKAGES_prepend += "${PN}-inetd ${PN}-telnetd "
 FILES_${PN}-inetd = " \
 	/etc/init.d/inetd.busybox \
 	/etc/inetd.conf \

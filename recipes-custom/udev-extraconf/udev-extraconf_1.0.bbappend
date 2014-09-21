@@ -1,7 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 DEPENDS_append = "update-rc.d-native"
 
-PRINC := "${@int(PRINC) + 1}"
+# PRINC is deprecated in daisy
+#PRINC := "${@int(PRINC) + 1}"
 
 SRC_URI += " \
 	file://media-tmpfs.sh \

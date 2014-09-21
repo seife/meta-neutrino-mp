@@ -7,7 +7,8 @@ CURLGNUTLS_coolstream = "--without-gnutls --without-ssl"
 CURLGNUTLS_tripledragon = "--without-gnutls --without-ssl"
 
 # the ac_cv_sizeof_off_t=8 warrants this
-PRINC := "${@int(PRINC) + 1}"
+# ...but PRINC is now deprecated...
+#PRINC := "${@int(PRINC) + 1}"
 
 do_configure_prepend() {
 	# curl checks this with _FILE_OFFSET_BITS=64...
