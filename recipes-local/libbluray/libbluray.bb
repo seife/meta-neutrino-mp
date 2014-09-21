@@ -7,7 +7,7 @@ PV = "0.5.0"
 
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
-DEPENDS = "libxml2"
+DEPENDS = "libxml2 freetype"
 
 SRC_URI = "http://download.videolan.org/videolan/libbluray/${PV}/libbluray-${PV}.tar.bz2 \
 	file://0001-m2ts_filter-reduced-logging.patch \
