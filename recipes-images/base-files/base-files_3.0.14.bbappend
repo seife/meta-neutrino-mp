@@ -1,4 +1,5 @@
-PRINC := "${@int(PRINC) + 1}"
+# PRINC is deprecated with daisy
+#PRINC := "${@int(PRINC) + 1}"
 
 BASEFILESISSUEINSTALL = "do_custom_baseissueinstall"
 
