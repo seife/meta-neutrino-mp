@@ -19,8 +19,6 @@ SRC_URI[sha256sum] = "0beb83eaf2c5e50730fc553406ef124d77bc02c64854631bdfc86bfd64
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--disable-kernel-module"
-
 PACKAGES =+ "fuse-utils-dbg fuse-utils libulockmgr libulockmgr-dev libulockmgr-dbg"
 
 RRECOMMENDS_${PN} = "kernel-module-fuse"
