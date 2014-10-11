@@ -1,0 +1,26 @@
+From 148d9cd122272e525288e2d9758c4dcb7db3731b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Cl=C3=A9ment=20B=C5=93sch?= <u@pkh.me>
+Date: Sat, 13 Sep 2014 15:15:32 +0200
+Subject: [PATCH 1/9] avformat/vobsub: fix NULL dereference
+
+(cherry picked from commit d86cf4a91de2aa9e167a73b56fb59962230e3a32)
+---
+ libavformat/mpeg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavformat/mpeg.c b/libavformat/mpeg.c
+index c53bab3..7d0be5e 100644
+--- a/libavformat/mpeg.c
++++ b/libavformat/mpeg.c
+@@ -783,7 +783,7 @@ static int vobsub_read_header(AVFormatContext *s)
+ 
+             while (*p == ' ')
+                 p++;
+-            av_log(s, AV_LOG_DEBUG, "IDX stream[%d] name=%s\n", st->id, p);
++            av_log(s, AV_LOG_DEBUG, "IDX stream[%d] name=%s\n", stream_id, p);
+             av_strlcpy(alt, p, sizeof(alt));
+             header_parsed = 1;
+ 
+-- 
+2.1.1
+

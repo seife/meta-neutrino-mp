@@ -1,0 +1,25 @@
+From f1147a1defa3b3977c955bc9da7649e05a32bf13 Mon Sep 17 00:00:00 2001
+From: "[CST] Focus" <focus.cst@gmail.com>
+Date: Sun, 28 Sep 2014 14:55:59 +0400
+Subject: [PATCH 3/9] libavutil/libm.h: fix compile
+
+---
+ libavutil/libm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavutil/libm.h b/libavutil/libm.h
+index 28d5df8..eb7b6f4 100644
+--- a/libavutil/libm.h
++++ b/libavutil/libm.h
+@@ -82,7 +82,7 @@ static av_always_inline float cbrtf(float x)
+ #define exp2f(x) ((float)exp2(x))
+ #endif /* HAVE_EXP2F */
+ 
+-#if !HAVE_FMINF
++#if 0 // !HAVE_FMINF
+ #undef fminf
+ static av_always_inline av_const float fminf(float x, float y)
+ {
+-- 
+2.1.1
+

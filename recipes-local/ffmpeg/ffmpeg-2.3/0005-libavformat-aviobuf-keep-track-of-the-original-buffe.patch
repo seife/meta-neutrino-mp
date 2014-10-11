@@ -1,0 +1,72 @@
+From 366b7343d7566c833391bda73cb83f401e0b894b Mon Sep 17 00:00:00 2001
+From: Michael Niedermayer <michaelni@gmx.at>
+Date: Wed, 26 Mar 2014 23:58:48 +0100
+Subject: [PATCH 5/9] libavformat/aviobuf: keep track of the original
+ buffer-size and restore it after probe/ensure-seekback
+
+  Signed-off-by: Michael Niedermayer <michaelni@gmx.at>
+---
+ libavformat/avio.h    |  7 -------
+ libavformat/aviobuf.c | 10 ++++------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
+
+diff --git a/libavformat/avio.h b/libavformat/avio.h
+index 4004b6f..defd617 100644
+--- a/libavformat/avio.h
++++ b/libavformat/avio.h
+@@ -146,13 +146,6 @@ typedef struct AVIOContext {
+      * This field is internal to libavformat and access from outside is not allowed.
+      */
+     int writeout_count;
+-
+-    /**
+-     * Original buffer size
+-     * used internally after probing and ensure seekback to reset the buffer size
+-     * This field is internal to libavformat and access from outside is not allowed.
+-     */
+-    int orig_buffer_size;
+ } AVIOContext;
+ 
+ /* unbuffered I/O */
+diff --git a/libavformat/aviobuf.c b/libavformat/aviobuf.c
+index 738459e..6d1368c 100644
+--- a/libavformat/aviobuf.c
++++ b/libavformat/aviobuf.c
+@@ -78,7 +78,6 @@ int ffio_init_context(AVIOContext *s,
+                   int64_t (*seek)(void *opaque, int64_t offset, int whence))
+ {
+     s->buffer      = buffer;
+-    s->orig_buffer_size =
+     s->buffer_size = buffer_size;
+     s->buf_ptr     = buffer;
+     s->opaque      = opaque;
+@@ -435,14 +434,14 @@ static void fill_buffer(AVIOContext *s)
+     }
+ 
+     /* make buffer smaller in case it ended up large after probing */
+-    if (s->read_packet && s->orig_buffer_size && s->buffer_size > s->orig_buffer_size) {
++    if (s->read_packet && s->buffer_size > max_buffer_size) {
+         if (dst == s->buffer) {
+-            ffio_set_buf_size(s, s->orig_buffer_size);
++            ffio_set_buf_size(s, max_buffer_size);
+ 
+             s->checksum_ptr = dst = s->buffer;
+         }
+-        av_assert0(len >= s->orig_buffer_size);
+-        len = s->orig_buffer_size;
++        av_assert0(len >= max_buffer_size);
++        len = max_buffer_size;
+     }
+ 
+     if (s->read_packet)
+@@ -801,7 +800,6 @@ int ffio_set_buf_size(AVIOContext *s, int buf_size)
+ 
+     av_free(s->buffer);
+     s->buffer = buffer;
+-    s->orig_buffer_size =
+     s->buffer_size = buf_size;
+     s->buf_ptr = buffer;
+     url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
+-- 
+2.1.1
+

@@ -1,0 +1,30 @@
+From 21c357810bc6b97d31c5bb3b3dc1945320e35f0e Mon Sep 17 00:00:00 2001
+From: "[CST] Focus" <focus.cst@gmail.com>
+Date: Mon, 6 Oct 2014 15:54:44 +0400
+Subject: [PATCH 7/9] Revert "h264_mp4toannexb_bsf: account for consecutive IDR
+ pictures."
+
+This reverts commit 7a1262fca37d16b0de5dfc34937b193a2ede8872.
+---
+ libavcodec/h264_mp4toannexb_bsf.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/libavcodec/h264_mp4toannexb_bsf.c b/libavcodec/h264_mp4toannexb_bsf.c
+index a003a1d..a7b4f41 100644
+--- a/libavcodec/h264_mp4toannexb_bsf.c
++++ b/libavcodec/h264_mp4toannexb_bsf.c
+@@ -179,11 +179,6 @@ static int h264_mp4toannexb_filter(AVBitStreamFilterContext *bsfc,
+         if (ctx->first_idr && (unit_type == 7 || unit_type == 8))
+             ctx->idr_sps_pps_seen = 1;
+ 
+-        /* if this is a new IDR picture following an IDR picture, reset the idr flag.
+-         * Just check first_mb_in_slice to be 0 as this is the simplest solution.
+-         * This could be checking idr_pic_id instead, but would complexify the parsing. */
+-        if (!ctx->first_idr && unit_type == 5 && (buf[1] & 0x80))
+-            ctx->first_idr = 1;
+ 
+         /* prepend only to the first type 5 NAL unit of an IDR picture, if no sps/pps are already present */
+         if (ctx->first_idr && unit_type == 5 && !ctx->idr_sps_pps_seen) {
+-- 
+2.1.1
+

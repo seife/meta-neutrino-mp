@@ -120,6 +120,7 @@ EXTRA_OECONF_append_coolstream = " \
 	--enable-demuxer=rm \
 	--enable-demuxer=rtsp \
 	--enable-demuxer=hls \
+	--enable-demuxer=hds \
 	--enable-demuxer=dts \
 	--enable-demuxer=wav \
 	--enable-demuxer=ogg \
