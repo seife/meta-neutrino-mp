@@ -55,6 +55,9 @@ EXTRA_OECONF = " \
     --extra-ldflags="${TARGET_LDFLAGS}" \
     --sysroot="${STAGING_DIR_TARGET}" \
     --enable-hardcoded-tables \
+    --disable-decoder=dpx \
+    --disable-encoder=dpx \
+    --disable-parser=dpx \
     ${EXTRA_FFCONF} \
 "
 EXTRA_OECONF_append_raspberrypi = " \
