@@ -1,9 +1,9 @@
-SUMMARY = "With FUSE it is possible to implement a fully functional filesystem in a userspace program"
+SUMMARY = "Implementation of a fully functional filesystem in a userspace program"
 DESCRIPTION = "FUSE (Filesystem in Userspace) is a simple interface for userspace \
-programs to export a virtual filesystem to the Linux kernel.  FUSE \
-also aims to provide a secure method for non privileged users to \
-create and mount their own filesystem implementations. \
-"
+               programs to export a virtual filesystem to the Linux kernel. FUSE \
+               also aims to provide a secure method for non privileged users to \
+               create and mount their own filesystem implementations. \
+              "
 HOMEPAGE = "http://fuse.sf.net"
 SECTION = "libs"
 LICENSE = "GPLv2 & LGPLv2"
@@ -18,6 +18,8 @@ SRC_URI[md5sum] = "33cae22ca50311446400daf8a6255c6a"
 SRC_URI[sha256sum] = "0beb83eaf2c5e50730fc553406ef124d77bc02c64854631bdfc86bfd6437391c"
 
 inherit autotools pkgconfig
+
+DEPENDS = "gettext-native"
 
 PACKAGES =+ "fuse-utils-dbg fuse-utils libulockmgr libulockmgr-dev libulockmgr-dbg"
 
