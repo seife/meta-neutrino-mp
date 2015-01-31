@@ -6,6 +6,9 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe \
 "
 
+# even if I'd like it to be otherwise, right now neutrino is machine specific, not CPU specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 PREFERRED_PROVIDER_virtual/stb-hal-libs ?= "libstb-hal"
 
 DEPENDS += " \
@@ -41,8 +44,7 @@ RDEPENDS_${PN}_append_tripledragon += "kernel-module-td-dvb-frontend"
 RCONFLICTS_${PN} = "neutrino-hd2"
 
 SRCREV = "${AUTOREV}"
-PV = "0.0+git${SRCPV}"
-PR = "r23"
+PV = "0.1+git${SRCPV}"
 
 SRC_URI = " \
 	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=git \
@@ -54,7 +56,9 @@ SRC_URI = " \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig update-rc.d 
+# the build system is not really broken wrt separate builddir,
+# but I want it to build inside the source for various reasons :-)
+inherit autotools-brokensep pkgconfig update-rc.d
 
 INITSCRIPT_PACKAGES   = "${PN}"
 INITSCRIPT_NAME_${PN} = "neutrino"
