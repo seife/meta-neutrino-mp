@@ -28,6 +28,7 @@ DEPENDS += " \
 	openthreads \
 	lua5.2 \
 	luaposix \
+	libsigc++-2.0 \
 "
 
 RDEPENDS_${PN} += " \
