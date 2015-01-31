@@ -30,8 +30,7 @@ DEPENDS_append_tripledragon = "directfb triple-sdk"
 RDEPENDS_${PN} = "ffmpeg"
 
 SRCREV = "${AUTOREV}"
-PV = "0.0+git${SRCPV}"
-PR = "r9"
+PV = "0.1+git${SRCPV}"
 
 # prepend, or it will end up in -bin package...
 PACKAGES_prepend_spark = "spark-fp "
@@ -46,7 +45,9 @@ SRC_URI = " \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+# the build system is not really broken wrt separate builddir,
+# but I want it to build inside the source for various reasons :-)
+inherit autotools-brokensep pkgconfig
 
 # CFLAGS_append = " -Wall -W -Wshadow -g -O2 -fno-strict-aliasing -rdynamic -DNEW_LIBCURL"
 
@@ -64,6 +65,10 @@ EXTRA_OECONF += "\
 EXTRA_OECONF_append_spark += "--with-boxtype=spark"
 EXTRA_OECONF_append_raspberrypi += "--with-boxtype=generic --with-boxmodel=raspi"
 EXTRA_OECONF_append_tripledragon += "--with-boxtype=tripledragon"
+
+do_configure_prepend() {
+	export AUTOMAKE="automake --foreign"
+}
 
 do_install_append() {
 	install -d ${D}/${datadir}
