@@ -7,7 +7,7 @@ PV = "0.5.0"
 
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
-DEPENDS = "libxml2 freetype"
+DEPENDS = "freetype"
 
 SRC_URI = "http://download.videolan.org/videolan/libbluray/${PV}/libbluray-${PV}.tar.bz2 \
 	file://0001-m2ts_filter-reduced-logging.patch \
@@ -21,3 +21,4 @@ SRC_URI[sha256sum] = "19213e193e1abc5ed2de65edfb539deda1dbf6cc64dfef03e405524c9c
 
 inherit autotools lib_package pkgconfig
 
+EXTRA_OECONF = "--without-libxml2"
