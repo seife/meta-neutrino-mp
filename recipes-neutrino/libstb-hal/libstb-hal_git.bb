@@ -28,6 +28,7 @@ DEPENDS_append_raspberrypi = "virtual/egl"
 DEPENDS_append_tripledragon = "directfb triple-sdk"
 
 RDEPENDS_${PN} = "ffmpeg"
+RDEPENDS_${PN}-dev_append_tripledragon = " triple-sdk-dev"
 
 SRCREV = "${AUTOREV}"
 PV = "0.1+git${SRCPV}"
