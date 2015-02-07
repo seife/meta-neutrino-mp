@@ -13,7 +13,6 @@ inherit autotools pkgconfig
 EXTRA_OECONF = " \
 	--enable-enca \
 	--enable-fontconfig \
-	--enable-png \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ae98663bac55afe5d989919d296f28a"
