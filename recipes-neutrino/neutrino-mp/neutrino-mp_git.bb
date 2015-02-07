@@ -52,6 +52,7 @@ SRC_URI = " \
 	file://neutrino.init \
 	file://timezone.xml \
 	file://custom-poweroff.init \
+	file://mount.mdev \
 	file://COPYING.GPL \
 "
 
@@ -83,6 +84,8 @@ do_install_prepend () {
 	install -m 755 ${WORKDIR}/neutrino.init ${D}/${sysconfdir}/init.d/neutrino
 	install -m 755 ${WORKDIR}/custom-poweroff.init ${D}/${sysconfdir}/init.d/custom-poweroff
 	install -m 644 ${WORKDIR}/timezone.xml ${D}/${sysconfdir}/timezone.xml
+	install -d ${D}/lib/mdev/fs
+	install -m 755 ${WORKDIR}/mount.mdev ${D}/lib/mdev/fs/mount
 	install -d ${D}/var/cache
 	install -d ${D}/var/tuxbox/config/
 	install -d ${D}/var/tuxbox/plugins/
@@ -110,6 +113,7 @@ FILES_${PN} += "\
 	/usr/share/tuxbox/neutrino \
 	/usr/share/iso-codes \
 	/usr/share/fonts \
+	/lib/mdev/fs/mount \
 	/share/fonts \
 	/share/tuxbox \
 	/var/cache \

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+DISK=${MDEV:0:3}
+
+case $ACTION in
+	add)
+		echo $ACTION > /sys/block/$DISK/$MDEV/uevent
+		for i in 1 2 3 4 5; do
+			sleep 1
+			grep -q ^/dev/$MDEV /proc/mounts && break
+		done
+		;;
+	remove)
+		echo $ACTION > /sys/block/$DISK/$MDEV/uevent
+		for i in 1 2 3 4 5; do
+			sleep 1
+			grep -q ^/dev/$MDEV /proc/mounts || break
+		done
+		;;
+	*)	echo "$0: unknown ACTION $ACTION"
+		;;
+esac
