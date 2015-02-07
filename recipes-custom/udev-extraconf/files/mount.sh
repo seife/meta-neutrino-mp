@@ -85,6 +85,9 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 	if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
 		grep -q "^$DEVNAME " /proc/mounts || automount
 	fi
+	if [ -x /usr/bin/mdev_helper ]; then
+		/usr/bin/mdev_helper
+	fi
 fi
 
 
@@ -94,6 +97,10 @@ if [ "$ACTION" = "remove" ] && [ -x "$UMOUNT" ] && [ -n "$DEVNAME" ]; then
 	do
 		$UMOUNT $mnt
 	done
+
+	if [ -x /usr/bin/mdev_helper ]; then
+		/usr/bin/mdev_helper
+	fi
 
 	# Remove empty directories from auto-mounter
 	name="`basename "$DEVNAME"`"
