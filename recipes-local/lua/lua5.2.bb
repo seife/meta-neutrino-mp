@@ -43,5 +43,7 @@ BBCLASSEXTEND = "native"
 FILES_${PN} += "${libdir}/lua"
 FILES_${PN} += "${datadir}/lua"
 
+RDEPENDS_${PN}-dev_append = " ${PN}-staticdev"
+
 SRC_URI[md5sum] = "dc7f94ec6ff15c985d2d6ad0f1b35654"
 SRC_URI[sha256sum] = "13c2fb97961381f7d06d5b5cea55b743c163800896fd5c5e2356201d3619002d"
