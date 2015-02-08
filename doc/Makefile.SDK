@@ -1,0 +1,155 @@
+####################################################
+# Makefile for building neutrino / libstb-hal
+# using the yocto-poky sdk
+#
+# based on the "native neutrino" Makefile
+# (C) 2012,2013,2015 Stefan Seyfried
+#
+####################################################
+#
+## set here or on command line
+# CCACHE=1
+
+ifneq ($(CCACHE),)
+CC  := ccache $(CC)
+CXX := ccache $(CXX)
+endif
+
+ifeq ($(ARCH),sh)
+PLATFORM ?= spark
+endif
+ifeq ($(ARCH),powerpc)
+PLATFORM ?= tripledragon
+endif
+ifeq ($(ARCH),arm)
+# TODO: distinguish raspi!
+PLATFORM ?= coolstream
+endif
+
+SOURCE = $(PWD)/source
+OBJ = $(PWD)/obj
+DEST = $(PWD)/root
+
+LH_SRC = $(SOURCE)/libstb-hal
+LH_OBJ = $(OBJ)/libstb-hal
+N_SRC  = $(SOURCE)/neutrino-mp
+N_OBJ  = $(OBJ)/neutrino-mp
+
+# C_FLAGS += -Wnarrowing -Wconversion
+C_FLAGS += -rdynamic
+C_FLAGS += -DPEDANTIC_VALGRIND_SETUP
+C_FLAGS += -DDYNAMIC_LUAPOSIX
+C_FLAGS += -DTEST_MENU
+C_FLAGS += -D_FORTIFY_SOURCE=2
+C_FLAGS += -W -Wall -Wshadow
+C_FLAGS += -Wno-unused-result
+C_FLAGS += -funsigned-char
+#C_FLAGS += -fvisibility=hidden
+
+
+ifneq ($(PLATFORM),coolstream)
+N_DEPS  = $(LH_OBJ)/libstb-hal.a
+SRC_DEP = $(LH_SRC)
+else
+### no way to link -lcoolstream-mt with --as-needed :-(
+COMMA = ,
+LDFLAGS := $(filter-out -Wl$(COMMA)--as-needed,$(LDFLAGS))
+endif
+ifeq ($(PLATFORM),tripledragon)
+C_FLAGS += -I$(OECORE_TARGET_SYSROOT)/usr/include/hardware
+endif
+
+CFLAGS   += $(C_FLAGS)
+CXXFLAGS += $(C_FLAGS)
+
+ACLOCAL_FLAGS = $(OECORE_ACLOCAL_OPTS)
+export ACLOCAL_FLAGS
+
+# the SDK perl might not know your language and complain about that
+export LC_ALL=C
+
+export PKG_CONFIG_PATH
+export CFLAGS CXXFLAGS
+
+neutrino: $(N_OBJ)/config.status
+	-rm $(N_OBJ)/src/neutrino # force relinking on changed libstb-hal
+	$(MAKE) -C $(N_OBJ) install DESTDIR=$(DEST)
+
+$(LH_OBJ)/libstb-hal.a: libstb-hal
+libstb-hal: $(LH_OBJ)/config.status
+	$(MAKE) -C $(LH_OBJ) install DESTDIR=$(DEST)
+
+$(LH_OBJ)/config.status: | $(LH_OBJ) $(LH_SRC)
+	$(LH_SRC)/autogen.sh
+	set -e; cd $(LH_OBJ); \
+		$(LH_SRC)/configure --enable-maintainer-mode \
+			--prefix= \
+			--enable-shared=no \
+			--with-boxtype=$(PLATFORM) \
+			$(CONFIGURE_FLAGS) \
+			INSTALL="`which install` -p"
+
+$(N_OBJ)/config.status: | sdkcheck $(N_OBJ) $(N_SRC) $(N_DEPS)
+	$(N_SRC)/autogen.sh
+	set -e; cd $(N_OBJ); \
+		$(N_SRC)/configure --enable-maintainer-mode \
+			--enable-silent-rules --enable-mdev \
+			--enable-giflib \
+			--enable-cleanup \
+			--with-tremor \
+			--enable-mdev \
+			--prefix= \
+			--with-target=cdk --with-boxtype=$(PLATFORM) \
+			$(CONFIGURE_FLAGS) \
+			--with-stb-hal-includes=$(DEST)/include/libstb-hal \
+			--with-stb-hal-build=$(LH_OBJ) \
+			; \
+		test -e svn_version.h || echo '#define BUILT_DATE "error - not set"' > svn_version.h; \
+		test -e git_version.h || echo '#define BUILT_DATE "error - not set"' > git_version.h; \
+		test -e version.h || touch version.h
+
+$(OBJ):
+	mkdir $(OBJ)
+
+$(OBJ)/neutrino-mp \
+$(OBJ)/libstb-hal: | $(OBJ)
+	mkdir $@
+
+$(SOURCE):
+	mkdir $@
+
+$(LH_SRC): | $(SOURCE)
+	cd $(SOURCE) && git clone git://gitorious.org/neutrino-hd/libstb-hal.git
+
+$(N_SRC): | $(SOURCE)
+	cd $(SOURCE) && git clone git://gitorious.org/neutrino-mp/neutrino-mp.git
+
+checkout: $(SRC_DEP) $(N_SRC)
+
+clean:
+	-$(MAKE) -C $(N_OBJ) clean
+	-$(MAKE) -C $(LH_OBJ) clean
+	rm -rf $(N_OBJ) $(LH_OBJ)
+
+ifeq ($(OECORE_SDK_VERSION),)
+sdkcheck:
+	@echo "======================================================"
+	@echo "yocto-poky SDK setup script needs to be sourced first!"
+	@echo "======================================================"
+	@echo
+	@false
+else
+sdkcheck:
+	@true
+endif
+
+printvars:
+	@echo "PLATFORM = $(PLATFORM)"
+	@echo "CC       = $(CC)"
+	@echo "CXX      = $(CXX)"
+	@echo "CFLAGS   = $(CFLAGS)"
+	@echo "CXXFLAGS = $(CXXFLAGS)"
+	@echo "LDFLAGS  = $(LDFLAGS)"
+
+PHONY = checkout neutrino
+.PHONY: $(PHONY)

@@ -1,0 +1,24 @@
+Using the Makefile.SDK
+======================
+
+for locally building a neutrino version with the yocto SDK,
+follow these steps:
+
+  * build the SDK:
+        bitbake neutrino-image -c populate_sdk
+  * install the SDK into your preferred directory
+        tmp/deploy/sdk/poky_glibc-x86_64-neutrino-image-armv6-toolchain-1.7.1.sh -d $HOME/cross
+  * copy Makefile.SDK to your build directory:
+        mkdir $HOME/neutrino-build
+        cp Makefile.SDK $HOME/neutrino-build
+  * source the toolchain config file:
+        . $HOME/cross/environment-setup-armv6-poky-linux-gnueabi
+  * now change into the build directory and call "make"
+        cd $HOME/neutrino-build
+        make
+
+By default, the Makefile will checkout a copy of neutrino-mp
+and libstb-hal in the directory "source/". If you already have
+your own checkouts, just symlink them into this directory.
+
+Have fun :-)
