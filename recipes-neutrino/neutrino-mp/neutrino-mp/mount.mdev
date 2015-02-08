@@ -1,9 +1,24 @@
 #!/bin/sh
 
 DISK=${MDEV:0:3}
+# TRIPLEDRAGON is probably the last box to use hd[ab]
+case $DISK in
+	hd*)	TD=true;;
+	*)	TD=false;;
+esac
 
 case $ACTION in
 	add)
+		if $TD; then
+			REALDEV=$(readlink -f /dev/$MDEV)
+			while read a b c; do
+				FSTABDEV=`readlink -f $a`
+				test x$FSTABDEV = x$REALDEV || continue
+				mount $b
+				break
+			done < /etc/fstab
+			exit
+		fi
 		echo $ACTION > /sys/block/$DISK/$MDEV/uevent
 		for i in 1 2 3 4 5; do
 			sleep 1
@@ -11,11 +26,22 @@ case $ACTION in
 		done
 		;;
 	remove)
+		if $TD; then
+			REALDEV=$(readlink -f /dev/$MDEV)
+			while read a b c; do
+				FSTABDEV=`readlink -f $a`
+				test x$FSTABDEV = x$REALDEV || continue
+				umount $b
+				break
+			done < /proc/mounts
+			exit
+		fi
 		echo $ACTION > /sys/block/$DISK/$MDEV/uevent
 		for i in 1 2 3 4 5; do
 			sleep 1
 			grep -q ^/dev/$MDEV /proc/mounts || break
 		done
+		udevadm settle # sometimes, device is still busy after above loop
 		;;
 	*)	echo "$0: unknown ACTION $ACTION"
 		;;
