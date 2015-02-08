@@ -103,6 +103,33 @@ do_install_append() {
 	ln -s ../usr/share/fonts  ${D}/share/
 }
 
+# disarm all automatic restart stuff, or we will blow up
+# when updating from the GUI...
+# stock postrm is "mostly harmless"...
+updatercd_prerm () {
+}
+
+updatercd_preinst() {
+if type update-rc.d >/dev/null 2>/dev/null; then
+	if [ -n "$D" ]; then
+		OPT="-f -r $D"
+	else
+		OPT="-f"
+	fi
+	update-rc.d $OPT ${INITSCRIPT_NAME} remove
+fi
+}
+
+updatercd_postinst() {
+if type update-rc.d >/dev/null 2>/dev/null; then
+	if [ -n "$D" ]; then
+		OPT="-r $D"
+	fi
+	update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
+fi
+}
+
+
 FILES_${PN} += "\
 	/.version \
 	${sysconfdir} \
