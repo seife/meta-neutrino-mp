@@ -18,6 +18,7 @@ IMAGE_INSTALL += " \
 	e2fsprogs-tune2fs \
 	djmount \
 	autofs \
+	util-linux-blkid \
 "
 
 # Tripledragon Kernel is too old for udev
