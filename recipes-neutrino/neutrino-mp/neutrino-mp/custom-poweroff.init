@@ -26,6 +26,23 @@ if type uncooloff > /dev/null; then
 	uncooloff $PARAM
 	# we should not come here :-)
 fi
+## platforms with proper hwclock
+## sysfs is often already unmounted here...
+mount -t sysfs sysfs /sys 2>/dev/null
+## this is right now only tested on spark...
+if test -e /sys/class/rtc/rtc0/wakealarm; then
+	read RTC_NOW < /sys/class/rtc/rtc0/since_epoch
+	NOW=$(date +%s)
+	OFFSET=$((RTC_NOW - NOW)) # offset between UTC and localtime
+	read WAKEUP < $TIMER
+	WAKEUP=$((WAKEUP + OFFSET))
+	echo "setting wakeup time to $WAKEUP (NOW: $RTC_NOW, OFFSET: $OFFSET)"
+	if test $WAKEUP -lt $((RTC_NOW + 30)); then
+		WAKEUP=$((RTC_NOW + 30))
+		echo "correcting WAKEUP to $WAKEUP"
+	fi
+	echo $WAKEUP > /sys/class/rtc/rtc0/wakealarm
+fi
 
 # fallthrough, so that regular "halt" script will kick in
 exit 0

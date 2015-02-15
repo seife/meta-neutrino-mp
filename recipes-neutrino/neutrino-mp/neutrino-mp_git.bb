@@ -41,6 +41,7 @@ DEPENDS_append_tripledragon = " \
 	td-dvb-wrapper \
 "
 RDEPENDS_${PN}_append_tripledragon += "kernel-module-td-dvb-frontend"
+RDEPENDS_${PN}_append_spark += " spark-fp"
 
 RCONFLICTS_${PN} = "neutrino-hd2"
 
