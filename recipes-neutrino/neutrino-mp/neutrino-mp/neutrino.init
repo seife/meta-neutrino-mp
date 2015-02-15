@@ -4,6 +4,22 @@ test -e /etc/default/neutrino && . /etc/default/neutrino
 
 MESSAGE=:
 type -p drivertool > /dev/null && MESSAGE="drivertool VFD_SET_TEXT"
+type -p spark_fp > /dev/null && MESSAGE=message
+
+message() {
+	if [ -n "$2" ]; then
+		spark_fp -T > /dev/null
+		if [ $? = 4 ]; then # 4xLED
+			STR="E$2"
+		else
+			STR="$1$2"
+		fi
+	else
+		STR="$@"
+	fi
+	echo "$0 message(): $STR"
+	echo "$STR" > /dev/vfd
+}
 
 start_neutrino() {
 	# spark: find out if we are running on HDMI or on SCART...
@@ -43,10 +59,11 @@ start_neutrino() {
 	if [ -e /tmp/.reboot ]; then # gets created by neutrino
 		$MESSAGE "rebooting..."
 		reboot
-	fi
-	if [ -e /tmp/.halt ]; then
+	elif [ -e /tmp/.halt ]; then
 		$MESSAGE "shutting down..."
 		poweroff
+	else
+		$MESSAGE "ERROR" "$RET"
 	fi
 	# this will survive the unmount of tmpfs
 	[ -e /tmp/.timer ] && cp /tmp/.timer /dev/shm/
