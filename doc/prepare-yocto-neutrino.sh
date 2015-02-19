@@ -23,7 +23,7 @@ fi
 case "$1" in
 	tripledragon)	MACH=tripledragon;	APPEND=td;	YOCTO_BRANCH=daisy	;;
 	coolstream)	MACH=coolstream;	APPEND=hd1				;;
-	raspberrypi)	MACH=raspberrypi;	APPEND=rpi				;;
+	raspberrypi)	MACH=raspberrypi;	APPEND=rpi	URL=http://git.yoctoproject.org/git/ ;;
 	spark)		MACH=spark;		APPEND=stl;	META_BSP=meta-stlinux	;;
 	*)		usage	;;
 esac
@@ -45,7 +45,7 @@ set -e
 git clone http://git.yoctoproject.org/git/poky $DEST
 cd $DEST
 git checkout -b $YOCTO_BRANCH origin/$YOCTO_BRANCH
-git clone https://github.com/seife/${META_BSP}.git
+git clone ${URL:-https://github.com/seife}/${META_BSP}.git
 git clone https://github.com/seife/meta-neutrino-mp.git
 case $PATH in
 	*:.:*) export PATH=${PATH/:.:/:} ;;
