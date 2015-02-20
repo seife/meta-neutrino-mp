@@ -41,6 +41,7 @@ EXTRA_OECONF = " \
     --enable-avfilter \
     \
     --cross-prefix=${TARGET_PREFIX} \
+    --cc="${CC}" \
     --prefix=${prefix} \
     \
     --enable-ffserver \
