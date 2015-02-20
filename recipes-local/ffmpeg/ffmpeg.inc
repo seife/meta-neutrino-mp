@@ -6,9 +6,14 @@ LICENSE_FLAGS = "commercial"
 
 ARM_INSTRUCTION_SET = "arm"
 
-DEPENDS = "zlib libogg libvorbis libtheora yasm-native"
+DEPENDS = " \
+	zlib libogg yasm-native \
+"
 
-INC_PR = "r8"
+DEPENDS_append_spark = "libxml2 libbluray"
+DEPENDS_append_coolstream = "libxml2"
+
+INC_PR = "r1"
 
 inherit autotools pkgconfig
 
@@ -20,8 +25,24 @@ BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 EXTRA_FFCONF_armv7a = "--cpu=cortex-a8"
 EXTRA_FFCONF ?= ""
 
+# don't ask.
+# libavcodec built with *any* optimisation (-O,-O2,-Os) dies with "floating point exception"
+# in aacdec. So remove the optimization flags and add the ones I found in the manpage manually
+# TODO: verify with newer compiler versions again.
+TARGET_CFLAGS_remove_spark = "-O2"
+TARGET_CFLAGS_append_spark = " \
+	-fauto-inc-dec -fcompare-elim -fcprop-registers -fdce -fdefer-pop \
+	-fdelayed-branch -fdse -fguess-branch-probability -fif-conversion2 -fif-conversion \
+	-fipa-pure-const -fipa-profile -fipa-reference -fmerge-constants -fsplit-wide-types \
+	-ftree-bit-ccp -ftree-builtin-call-dce -ftree-ccp -ftree-ch -ftree-copyrename \
+	-ftree-dce -ftree-dominator-opts -ftree-dse -ftree-forwprop -ftree-fre \
+	-ftree-phiprop -ftree-slsr -ftree-sra -ftree-pta -ftree-ter \
+	-fforward-propagate  -fira-region=mixed \
+	-funit-at-a-time -fomit-frame-pointer \
+"
+
 #PACKAGECONFIG ??= "bzip2 x264 ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG ??= "bzip2"
+#PACKAGECONFIG ??= "bzip2"
 PACKAGECONFIG[jack] = "--enable-indev=jack,--disable-indev=jack,jack"
 PACKAGECONFIG[bzip2] = "--enable-bzlib,--disable-bzlib,bzip2"
 PACKAGECONFIG[schroedinger] = "--enable-libschroedinger,--disable-libschroedinger,schroedinger"
@@ -37,17 +58,16 @@ EXTRA_OECONF = " \
     --enable-pic \
     --enable-shared \
     --enable-pthreads \
-    --enable-gpl \
-    --enable-avfilter \
     \
     --cross-prefix=${TARGET_PREFIX} \
     --cc="${CC}" \
     --prefix=${prefix} \
     \
+    --enable-ffmpeg \
     --enable-ffserver \
     --enable-ffplay \
-    --enable-libtheora  \
-    --enable-libvorbis \
+    --disable-libtheora \
+    --disable-libvorbis \
     --arch=${TARGET_ARCH} \
     --target-os="linux" \
     --enable-cross-compile \
@@ -58,6 +78,7 @@ EXTRA_OECONF = " \
     --disable-decoder=dpx \
     --disable-encoder=dpx \
     --disable-parser=dpx \
+    --disable-doc \
     ${EXTRA_FFCONF} \
 "
 EXTRA_OECONF_append_raspberrypi = " \
@@ -147,6 +168,17 @@ EXTRA_OECONF_append_coolstream = " \
 	--disable-postproc \
 	--disable-swscale \
 "
+
+EXTRA_OECONF_append_spark = " \
+	--disable-runtime-cpudetect \
+	--enable-demuxers \
+	--disable-devices \
+	--enable-protocol=bluray \
+	--enable-libbluray \
+	--disable-bsfs \
+	--disable-optimizations \
+"
+
 # strip down ffmpeg for tripledragon: most of it is not useful here.
 # --arch=ppc4xx seems to still have a problem with the assembler...
 EXTRA_OECONF_append_tripledragon = " \
@@ -175,7 +207,9 @@ do_configure() {
 }
 
 do_install_append() {
-    install -m 0644 ${S}/libavfilter/*.h ${D}${includedir}/libavfilter/
+	if test -d ${D}${includedir}/libavfilter/; then
+		install -m 0644 ${S}/libavfilter/*.h ${D}${includedir}/libavfilter/
+	fi
 }
 
 FFMPEG_LIBS = "libavcodec libavdevice libavformat \

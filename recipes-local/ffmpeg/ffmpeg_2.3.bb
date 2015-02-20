@@ -2,6 +2,8 @@ PV = "2.3.6"
 
 require ffmpeg.inc
 
+PR = "${INC_PR}"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/ffmpeg-2.3:"
 
 SRC_URI = " \
