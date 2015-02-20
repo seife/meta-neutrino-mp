@@ -43,6 +43,7 @@ SRC_URI = " \
 	git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=http \
 	file://blank_480.mpg \
 	file://blank_576.mpg \
+	file://timer-wakeup.init \
 "
 
 S = "${WORKDIR}/git"
@@ -81,6 +82,12 @@ do_install_append_tripledragon() {
 	install -D -m 0644 ${WORKDIR}/blank_480.mpg ${D}/${datadir}/tuxbox/blank_480.mpg
 }
 
+do_install_append_spark() {
+	install -D -m 0755 ${WORKDIR}/timer-wakeup.init ${D}/${sysconfdir}/init.d/timer-wakeup
+	# neutrino is 99, so we put this at 98.
+	update-rc.d -r ${D} timer-wakeup start 98 5 .
+}
+
 # pic2m2v is included in lib package, because it is always needed,
 # libstb-hal-bin contains all other binaries, which are rather for testing only
 FILES_${PN} = "\
@@ -91,4 +98,7 @@ FILES_${PN} = "\
 
 FILES_${PN}-dev += "${includedir}/libstb-hal/*"
 
-FILES_spark-fp = "${bindir}/spark_fp"
+FILES_spark-fp = " \
+	${bindir}/spark_fp \
+	${sysconfdir} \
+"

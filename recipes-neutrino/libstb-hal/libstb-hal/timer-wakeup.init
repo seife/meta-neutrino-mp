@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case $1 in
+	start)	;;
+	*)	exit 0 ;;
+esac
+
+# TODO: other architectures
+if type -p spark_fp > /dev/null; then
+	WAKEUP=$(spark_fp -g)
+	REASON=$?
+	echo "wakeup reason: $REASON ($WAKEUP)"
+	test $REASON = 3 && touch /tmp/.timer_wakeup
+fi
