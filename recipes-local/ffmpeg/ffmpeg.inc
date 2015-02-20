@@ -183,7 +183,7 @@ FFMPEG_LIBS = "libavcodec libavdevice libavformat \
 
 PACKAGES += "${PN}-vhook-dbg ${PN}-vhook ffmpeg-x264-presets"
 
-RSUGGESTS_${PN} = "mplayer"
+## RSUGGESTS_${PN} = "mplayer"
 FILES_${PN} = "${bindir} ${datadir}/ffprobe.xsd"
 FILES_${PN}-dev = "${includedir}/${PN}"
 
@@ -209,6 +209,15 @@ python populate_packages_prepend() {
                       prepend=True,
                       allow_links=True)
 
+    # Debug packages (-dbg)
+    av_libdebug = av_libdir + '/.debug'
+    do_split_packages(d, av_libdebug, '^lib(.*)\.so',
+                      output_pattern='lib%s-dbg',
+                      description='libav %s debug package',
+                      extra_depends='',
+                      prepend=True,
+                      allow_links=True)
+
     # Development packages (-dev, -staticdev)
     do_split_packages(d, av_libdir, '^lib(.*)\.so$',
                       output_pattern='lib%s-dev',
@@ -216,6 +225,7 @@ python populate_packages_prepend() {
                       extra_depends='${PN}-dev',
                       prepend=True,
                       allow_links=True)
+
     do_split_packages(d, av_pkgconfig, '^lib(.*)\.pc$',
                       output_pattern='lib%s-dev',
                       description='libav %s development package',
