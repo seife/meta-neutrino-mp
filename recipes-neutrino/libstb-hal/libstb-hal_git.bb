@@ -40,7 +40,7 @@ PACKAGES_prepend_spark = "spark-fp "
 PACKAGES += "${PN}-bin"
 
 SRC_URI = " \
-	git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=git \
+	git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=http \
 	file://blank_480.mpg \
 	file://blank_576.mpg \
 "
