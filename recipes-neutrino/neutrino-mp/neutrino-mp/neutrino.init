@@ -1,5 +1,16 @@
 #!/bin/sh
 #
+# do nothing if neutrino crashes?
+IGNORE_ERROR=false
+
+# if neutrino crashes, just restart it or reboot the box?
+REBOOT_ON_ERROR=false
+
+# coolstream drivers in general don't recover from unclean
+# shutdown => reboot
+grep -q CoolStream /proc/cpuinfo && REBOOT_ON_ERROR=true
+
+# all those can be overridden in /etc/default/neutrino
 test -e /etc/default/neutrino && . /etc/default/neutrino
 
 MESSAGE=:
@@ -41,24 +52,38 @@ start_neutrino() {
 	[ x$NEUTRINO_QUIET = xyes ] && QUIET=">/dev/null 2>&1"
 	# coolstream: work around driver problems
 	type -p uncoolinit > /dev/null && uncoolinit $QUIET
-	rm -f /tmp/.halt /tmp/.reboot /tmp/.timer /dev/shm/.timer
-	start-stop-daemon -S -p /var/run/neutrino.pid -m -o -x neutrino $QUIET
-	RET=$?
-	echo "Neutrino exited with exit code $RET"
-	$MESSAGE "neutrino:$RET"
-	if [ $RET = 1 ]; then
-		touch /tmp/.halt
-	fi
-	$MESSAGE "start_n ends"
-	if [ -e /tmp/.reboot ]; then # gets created by neutrino
-		$MESSAGE "rebooting..."
-		reboot
-	elif [ -e /tmp/.halt ]; then
-		$MESSAGE "shutting down..."
-		poweroff
-	else
-		$MESSAGE "ERROR" "$RET"
-	fi
+	while true; do
+		rm -f /tmp/.halt /tmp/.reboot /tmp/.timer /dev/shm/.timer
+		start-stop-daemon -S -p /var/run/neutrino.pid -m -o -x neutrino $QUIET
+		RET=$?
+		echo "Neutrino exited with exit code $RET"
+		$MESSAGE "neutrino:$RET"
+		if [ $RET = 1 ]; then
+			touch /tmp/.halt
+		fi
+		# $MESSAGE "start_n ends"
+		if [ -e /tmp/.reboot ]; then # gets created by neutrino
+			$MESSAGE "rebooting..."
+			reboot
+			break
+		elif [ -e /tmp/.halt ]; then
+			$MESSAGE "shutting down..."
+			poweroff
+			break
+		else
+			$MESSAGE "ERROR" "$RET"
+		fi
+		[ $RET = 0 ] && break
+		$IGNORE_ERROR && break
+		if $REBOOT_ON_ERROR; then
+			echo "==============================================================="
+			echo "=== REBOOTING due to REBOOT_ON_ERROR=true and exit code $RET ==="
+			echo "==============================================================="
+			reboot
+			break
+		fi
+		echo "=== restarting neutrino after exit code $RET ==="
+	done
 	# this will survive the unmount of tmpfs
 	[ -e /tmp/.timer ] && cp /tmp/.timer /dev/shm/
 }
