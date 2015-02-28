@@ -3,6 +3,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 # PRINC is now deprecated...
 #PRINC := "${@int(PRINC) + 2}"
 
+PR .= ".1"
+
 SRC_URI += " \
 	file://neutrino-busybox.cfg \
 	file://telnetd.busybox \
@@ -42,6 +44,17 @@ pkg_prerm_${PN}-telnetd () {
 # do not stop telnetd on update, or uninstall is impossible
 # while being logged in via telnet
 exit 0
+}
+
+pkg_preinst_${PN}-telnetd() {
+#!/bin/sh
+if test "x$D" != "x"; then
+	OPT="-r $D"
+fi
+if type update-rc.d >/dev/null 2>/dev/null; then
+	update-rc.d -f $OPT telnetd.busybox remove
+fi
+exit
 }
 
 pkg_postinst_${PN}-telnetd() {
