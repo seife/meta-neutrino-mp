@@ -4,6 +4,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://tuxcom/tuxcom.c;beginline=10;endline=24;md5=8cfd78763de33face1d26b11904e84d5"
 HOMEPAGE = "https://gitorious.org/neutrino-hd/neutrino-hd-plugins"
 
+DEPENDS = "freetype"
+
 SRCREV = "${AUTOREV}"
 PV = "0.0+git${SRCPV}"
 # does not work like that?
