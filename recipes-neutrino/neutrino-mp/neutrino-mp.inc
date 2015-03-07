@@ -13,7 +13,6 @@ EXTRA_OECONF = " \
 	--with-target=native \
 	--disable-silent-rules \
 	--with-tremor \
-	--disable-upnp \
 	--enable-giflib \
 	--enable-mdev \
 	--with-stb-hal-includes=${STAGING_DIR_HOST}/usr/include/libstb-hal \
@@ -25,6 +24,7 @@ EXTRA_OECONF_append_raspberrypi += "\
 
 EXTRA_OECONF_append_tripledragon += "\
 	--with-boxtype=tripledragon \
+	--disable-upnp \
 "
 
 EXTRA_OECONF_append_coolstream += "\
