@@ -1,6 +1,6 @@
 SUMMARY = "Port of neutrino to multiple platforms, including (but not limited to) the Tripledragon, AZbox ME/miniME and Fulan Spark/Spark7162 settop boxes and the Raspberry Pi."
 DESCRIPTION = "Port of neutrino to multiple platforms."
-HOMEPAGE = "https://gitorious.org/neutrino-mp/neutrino-mp"
+HOMEPAGE = "https://github.com/neutrino-mp"
 SECTION = "libs"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe \
@@ -50,7 +50,7 @@ PV = "0.1+git${SRCPV}"
 PR = "r1"
 
 SRC_URI = " \
-	git://gitorious.org/neutrino-mp/neutrino-mp.git;protocol=http \
+	git://github.com/neutrino-mp/neutrino-mp.git;protocol=https \
 	file://neutrino.init \
 	file://timezone.xml \
 	file://custom-poweroff.init \

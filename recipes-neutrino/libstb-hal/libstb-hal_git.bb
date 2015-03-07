@@ -4,7 +4,7 @@
 
 SUMMARY = "Library to abstract STB hardware. Supports Tripledragon, AZbox ME, Fulan Spark boxes as well as generic PC hardware and the Raspberry Pi right now."
 DESCRIPTION = "Library to abstract STB hardware."
-HOMEPAGE = "https://gitorious.org/neutrino-hd/libstb-hal"
+HOMEPAGE = "https://github.com/neutrino-mp"
 SECTION = "libs"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://${THISDIR}/libstb-hal/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
@@ -40,7 +40,7 @@ PACKAGES_prepend_spark = "spark-fp "
 PACKAGES += "${PN}-bin"
 
 SRC_URI = " \
-	git://gitorious.org/neutrino-hd/libstb-hal.git;protocol=http \
+	git://github.com/neutrino-mp/libstb-hal.git;protocol=https \
 	file://blank_480.mpg \
 	file://blank_576.mpg \
 	file://timer-wakeup.init \
