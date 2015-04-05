@@ -1,5 +1,6 @@
 SUMMARY = "OpenThreads is a cross platform, object orientated threading library."
 DESCRIPTION = "OpenThreads is a cross platform, object orientated threading library."
+HOMEPAGE = "http://www.openscenegraph.org/"
 SECTION = "libs"
 LICENSE = "OSGPL"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=9226151d58bcdf987ed14e7dc8cedcbc \
@@ -8,7 +9,8 @@ DEPENDS = ""
 SRCDATE = "${PV}"
 PR = "r1"
 
-SRC_URI = "https://gitorious.org/neutrino-hd/buildsystem-cs/raw/archive-patches/sources/OpenThreads-svn-13083.tar.lzma \
+# this is a tarball of http://svn.openscenegraph.org/osg/OpenThreads/ rev 13083
+SRC_URI = "file://OpenThreads-svn-13083.tar.lzma \
            file://002-omit-policy-cmp0014.patch;pnum=0 \
 "
 
