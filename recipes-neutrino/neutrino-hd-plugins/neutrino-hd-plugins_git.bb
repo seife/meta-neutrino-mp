@@ -11,7 +11,7 @@ PV = "0.0+git${SRCPV}"
 # does not work like that?
 # PV_nhd-plugin-tuxcom = "1.17+git${SRCPV}"
 
-SRC_URI = "git://gitorious.org/neutrino-hd/neutrino-hd-plugins.git;protocol=http \
+SRC_URI = "git://github.com/neutrino-mp/neutrino-hd-plugins.git;protocol=http \
 "
 
 S = "${WORKDIR}/git"
