@@ -16,6 +16,8 @@ SRC_URI = " \
 	file://coolithekV${PV}.tar.gz \
 "
 
+RDEPENDS_${PN} = "lua-json"
+
 S = "${WORKDIR}/temp_inst/inst"
 
 do_install () {
@@ -29,6 +31,9 @@ FILES_${PN} = " \
 	${libdir}/tuxbox/plugins \
 	${datadir}/lua/5.2 \
 "
+
+# no need for -dev and -dbg..
+PACKAGES = "${PN}"
 
 pkg_postinst_${PN} () {
 	# pic2m2v is only available on platforms that use "real" libstb-hal
