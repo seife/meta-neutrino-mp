@@ -1,0 +1,102 @@
+From e60604180ceecbe155a52d267fb31ae5fd65db17 Mon Sep 17 00:00:00 2001
+From: Michael Niedermayer <michael@niedermayer.cc>
+Date: Mon, 27 Jul 2015 16:31:05 +0200
+Subject: [PATCH 4/6] avcodec/dvbsubdec: Allow selecting the substream, or all
+ substreams
+
+Fixes Ticket 2161
+
+Signed-off-by: Michael Niedermayer <michael@niedermayer.cc>
+
+Conflicts:
+	doc/decoders.texi
+	libavcodec/dvbsubdec.c
+---
+ doc/decoders.texi      | 19 +++++++++++++++++++
+ libavcodec/dvbsubdec.c | 21 +++++++++++++++------
+ 2 files changed, 34 insertions(+), 6 deletions(-)
+
+diff --git a/doc/decoders.texi b/doc/decoders.texi
+index 01fca9f..6312273 100644
+--- a/doc/decoders.texi
++++ b/doc/decoders.texi
+@@ -171,6 +171,25 @@ without this library.
+ @chapter Subtitles Decoders
+ @c man begin SUBTILES DECODERS
+ 
++@section dvbsub
++
++@subsection Options
++
++@table @option
++@item compute_clut
++@table @option
++@item -1
++Compute clut if no matching CLUT is in the stream.
++@item 0
++Never compute CLUT
++@item 1
++Always compute CLUT and override the one provided in the stream.
++@end table
++@item dvb_substream
++Selects the dvb substream, or all substreams if -1 which is default.
++
++@end table
++
+ @section dvdsub
+ 
+ This codec decodes the bitmap subtitles used in DVDs; the same subtitles can
+diff --git a/libavcodec/dvbsubdec.c b/libavcodec/dvbsubdec.c
+index 50bf77b..80d4e70 100644
+--- a/libavcodec/dvbsubdec.c
++++ b/libavcodec/dvbsubdec.c
+@@ -237,6 +237,8 @@ typedef struct DVBSubContext {
+     int time_out;
+     int compute_edt; /**< if 1 end display time calculated using pts
+                           if 0 (Default) calculated using time out */
++    int compute_clut;
++    int substream;
+     int64_t prev_start;
+     DVBSubRegion *region_list;
+     DVBSubCLUT   *clut_list;
+@@ -367,17 +369,22 @@ static av_cold int dvbsub_init_decoder(AVCodecContext *avctx)
+     int i, r, g, b, a = 0;
+     DVBSubContext *ctx = avctx->priv_data;
+ 
+-    if (!avctx->extradata || (avctx->extradata_size < 4) || ((avctx->extradata_size % 5 != 0) && (avctx->extradata_size != 4))) {
++    if (ctx->substream < 0) {
++        ctx->composition_id = -1;
++        ctx->ancillary_id   = -1;
++    } else if (!avctx->extradata || (avctx->extradata_size < 4) || ((avctx->extradata_size % 5 != 0) && (avctx->extradata_size != 4))) {
+         av_log(avctx, AV_LOG_WARNING, "Invalid DVB subtitles stream extradata!\n");
+         ctx->composition_id = -1;
+         ctx->ancillary_id   = -1;
+     } else {
+-        if (avctx->extradata_size > 5) {
+-            av_log(avctx, AV_LOG_WARNING, "Decoding first DVB subtitles sub-stream\n");
++        if (avctx->extradata_size > 5*ctx->substream + 2) {
++            ctx->composition_id = AV_RB16(avctx->extradata + 5*ctx->substream);
++            ctx->ancillary_id   = AV_RB16(avctx->extradata + 5*ctx->substream + 2);
++        } else {
++            av_log(avctx, AV_LOG_WARNING, "Selected DVB subtitles sub-stream %d is not available\n", ctx->substream);
++            ctx->composition_id = AV_RB16(avctx->extradata);
++            ctx->ancillary_id   = AV_RB16(avctx->extradata + 2);
+         }
+-
+-        ctx->composition_id = AV_RB16(avctx->extradata);
+-        ctx->ancillary_id   = AV_RB16(avctx->extradata + 2);
+     }
+ 
+     ctx->version = -1;
+@@ -1709,6 +1716,8 @@ end:
+ #define DS AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_SUBTITLE_PARAM
+ static const AVOption options[] = {
+     {"compute_edt", "compute end of time using pts or timeout", offsetof(DVBSubContext, compute_edt), FF_OPT_TYPE_INT, {.i64 = 0}, 0, 1, DS},
++    {"compute_clut", "compute clut when not available(-1) or always(1) or never(0)", offsetof(DVBSubContext, compute_clut), FF_OPT_TYPE_INT, {.i64 = -1}, -1, 1, DS},
++    {"dvb_substream", "", offsetof(DVBSubContext, substream), FF_OPT_TYPE_INT, {.i64 = -1}, -1, 63, DS},
+     {NULL}
+ };
+ static const AVClass dvbsubdec_class = {
+-- 
+2.6.4
+
