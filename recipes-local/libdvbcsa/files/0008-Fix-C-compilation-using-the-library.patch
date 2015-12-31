@@ -1,0 +1,42 @@
+From 20f1bd5532d08b457fb74b72625951e86ed74f1e Mon Sep 17 00:00:00 2001
+From: jb <jb@3589dd83-fcde-432d-8375-59f0e9bff529>
+Date: Sat, 28 Feb 2015 19:38:04 +0000
+Subject: [PATCH 8/8] Fix C++ compilation using the library
+
+The linker wouldn't find the symbol otherwise
+
+
+
+git-svn-id: svn://svn.videolan.org/libdvbcsa/trunk@20 3589dd83-fcde-432d-8375-59f0e9bff529
+---
+ src/dvbcsa/dvbcsa.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/dvbcsa/dvbcsa.h b/src/dvbcsa/dvbcsa.h
+index e051f4f..b4d29d1 100644
+--- a/src/dvbcsa/dvbcsa.h
++++ b/src/dvbcsa/dvbcsa.h
+@@ -27,6 +27,10 @@
+ #ifndef LIBDVBCSA_H_
+ #define LIBDVBCSA_H_
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ /* csa control word */
+ typedef unsigned char		dvbcsa_cw_t[8];
+ 
+@@ -108,5 +112,9 @@ void dvbcsa_bs_encrypt(const struct dvbcsa_bs_key_s *key,
+ 		       const struct dvbcsa_bs_batch_s *pcks,
+ 		       unsigned int maxlen);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif
+ 
+-- 
+2.1.4
+

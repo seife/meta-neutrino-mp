@@ -1,0 +1,63 @@
+From 7b66e0c2e0432c3389942c17ca9a8b6c00e23964 Mon Sep 17 00:00:00 2001
+From: courmisch <courmisch@3589dd83-fcde-432d-8375-59f0e9bff529>
+Date: Mon, 18 Jul 2011 20:36:11 +0000
+Subject: [PATCH 1/8] Use (void) where applicable
+
+git-svn-id: svn://svn.videolan.org/libdvbcsa/trunk@13 3589dd83-fcde-432d-8375-59f0e9bff529
+---
+ src/dvbcsa/dvbcsa.h  | 4 ++--
+ src/dvbcsa_algo.c    | 2 +-
+ src/dvbcsa_bs_algo.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/dvbcsa/dvbcsa.h b/src/dvbcsa/dvbcsa.h
+index c8fec59..e051f4f 100644
+--- a/src/dvbcsa/dvbcsa.h
++++ b/src/dvbcsa/dvbcsa.h
+@@ -38,7 +38,7 @@ typedef unsigned char		dvbcsa_cw_t[8];
+ typedef struct dvbcsa_key_s	dvbcsa_key_t;
+ 
+ /** allocate a new csa key context */
+-struct dvbcsa_key_s * dvbcsa_key_alloc();
++struct dvbcsa_key_s * dvbcsa_key_alloc(void);
+ 
+ /** free a csa key context */
+ 
+@@ -76,7 +76,7 @@ typedef struct dvbcsa_bs_key_s	dvbcsa_bs_key_t;
+ 
+ /** allocate a new csa bitslice key context */
+ 
+-struct dvbcsa_bs_key_s * dvbcsa_bs_key_alloc();
++struct dvbcsa_bs_key_s * dvbcsa_bs_key_alloc(void);
+ 
+ /** free a csa bitslice key context */
+ 
+diff --git a/src/dvbcsa_algo.c b/src/dvbcsa_algo.c
+index e24ed43..6e8de8c 100644
+--- a/src/dvbcsa_algo.c
++++ b/src/dvbcsa_algo.c
+@@ -70,7 +70,7 @@ void dvbcsa_encrypt (const struct dvbcsa_key_s *key, uint8_t *data, unsigned int
+ #endif
+ }
+ 
+-struct dvbcsa_key_s * dvbcsa_key_alloc()
++struct dvbcsa_key_s * dvbcsa_key_alloc(void)
+ {
+   return malloc(sizeof (struct dvbcsa_key_s));
+ }
+diff --git a/src/dvbcsa_bs_algo.c b/src/dvbcsa_bs_algo.c
+index 7838990..bc8e61f 100644
+--- a/src/dvbcsa_bs_algo.c
++++ b/src/dvbcsa_bs_algo.c
+@@ -74,7 +74,7 @@ void dvbcsa_bs_encrypt(const struct dvbcsa_bs_key_s *key,
+   BS_EMPTY ();			// restore CPU multimedia state
+ }
+ 
+-struct dvbcsa_bs_key_s * dvbcsa_bs_key_alloc()
++struct dvbcsa_bs_key_s * dvbcsa_bs_key_alloc(void)
+ {
+   void *p;
+ 
+-- 
+2.1.4
+

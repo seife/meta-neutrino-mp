@@ -1,0 +1,109 @@
+From db110460d894320403d0cdbf1f625379d069827d Mon Sep 17 00:00:00 2001
+From: diaxen <diaxen@3589dd83-fcde-432d-8375-59f0e9bff529>
+Date: Mon, 20 May 2013 20:18:42 +0000
+Subject: [PATCH 7/8] removed BS_XOREQ macro from bitslice ops headers
+
+git-svn-id: svn://svn.videolan.org/libdvbcsa/trunk@19 3589dd83-fcde-432d-8375-59f0e9bff529
+---
+ src/dvbcsa_bs_altivec.h | 1 -
+ src/dvbcsa_bs_block.c   | 1 +
+ src/dvbcsa_bs_mmx.h     | 1 -
+ src/dvbcsa_bs_sse.h     | 1 -
+ src/dvbcsa_bs_uint32.h  | 1 -
+ src/dvbcsa_bs_uint64.h  | 1 -
+ test/testbsops.c        | 7 -------
+ 7 files changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/src/dvbcsa_bs_altivec.h b/src/dvbcsa_bs_altivec.h
+index 7a84dfa..8c1b608 100644
+--- a/src/dvbcsa_bs_altivec.h
++++ b/src/dvbcsa_bs_altivec.h
+@@ -86,7 +86,6 @@ static DVBCSA_INLINE dvbcsa_bs_word_t get_bs_val8( uint8_t val, dvbcsa_bs_word_t
+ #define BS_AND(a, b)	vec_and((a), (b))
+ #define BS_OR(a, b)	vec_or((a), (b))
+ #define BS_XOR(a, b)	vec_xor((a), (b))
+-#define BS_XOREQ(a, b)	{ dvbcsa_bs_word_t *_t = &(a); *_t = vec_xor(*_t, (b)); }
+ #define BS_NOT(a)	vec_nor((a), (a))
+ 
+ #define SHVAL_1 BS_VAL8(01)
+diff --git a/src/dvbcsa_bs_block.c b/src/dvbcsa_bs_block.c
+index dc8475e..58f6ca9 100644
+--- a/src/dvbcsa_bs_block.c
++++ b/src/dvbcsa_bs_block.c
+@@ -26,6 +26,7 @@
+ #include "dvbcsa/dvbcsa.h"
+ #include "dvbcsa_bs.h"
+ 
++#define BS_XOREQ(a, b)	do { dvbcsa_bs_word_t *_t = &(a); *_t = BS_XOR(*_t, (b)); } while (0)
+ 
+ DVBCSA_INLINE static inline void
+ dvbcsa_bs_block_decrypt_register (const dvbcsa_bs_word_t *block, dvbcsa_bs_word_t *r)
+diff --git a/src/dvbcsa_bs_mmx.h b/src/dvbcsa_bs_mmx.h
+index 1982304..2235ff8 100644
+--- a/src/dvbcsa_bs_mmx.h
++++ b/src/dvbcsa_bs_mmx.h
+@@ -42,7 +42,6 @@ typedef __m64 dvbcsa_bs_word_t;
+ #define BS_AND(a, b)	_m_pand((a), (b))
+ #define BS_OR(a, b)	_m_por((a), (b))
+ #define BS_XOR(a, b)	_m_pxor ((a), (b))
+-#define BS_XOREQ(a, b)	{ dvbcsa_bs_word_t *_t = &(a); *_t = _m_pxor(*_t, (b)); }
+ #define BS_NOT(a)	_m_pxor ((a), BS_VAL8(ff))
+ 
+ #define BS_SHL(a, n)	_m_psllqi((a), n)
+diff --git a/src/dvbcsa_bs_sse.h b/src/dvbcsa_bs_sse.h
+index d2ffef3..f1b0c79 100644
+--- a/src/dvbcsa_bs_sse.h
++++ b/src/dvbcsa_bs_sse.h
+@@ -43,7 +43,6 @@ typedef __m128i dvbcsa_bs_word_t;
+ #define BS_AND(a, b)	_mm_and_si128((a), (b))
+ #define BS_OR(a, b)	_mm_or_si128((a), (b))
+ #define BS_XOR(a, b)	_mm_xor_si128((a), (b))
+-#define BS_XOREQ(a, b)	{ dvbcsa_bs_word_t *_t = &(a); *_t = _mm_xor_si128(*_t, (b)); }
+ #define BS_NOT(a)	_mm_andnot_si128((a), BS_VAL8(ff))
+ 
+ #define BS_SHL(a, n)	_mm_slli_epi64(a, n)
+diff --git a/src/dvbcsa_bs_uint32.h b/src/dvbcsa_bs_uint32.h
+index ae35a36..4aa4efb 100644
+--- a/src/dvbcsa_bs_uint32.h
++++ b/src/dvbcsa_bs_uint32.h
+@@ -39,7 +39,6 @@ typedef uint32_t dvbcsa_bs_word_t;
+ #define BS_AND(a, b)	((a) & (b))
+ #define BS_OR(a, b)	((a) | (b))
+ #define BS_XOR(a, b)	((a) ^ (b))
+-#define BS_XOREQ(a, b)	((a) ^= (b))
+ #define BS_NOT(a)	(~(a))
+ 
+ #define BS_SHL(a, n)	((a) << (n))
+diff --git a/src/dvbcsa_bs_uint64.h b/src/dvbcsa_bs_uint64.h
+index 84ef308..a34b4bc 100644
+--- a/src/dvbcsa_bs_uint64.h
++++ b/src/dvbcsa_bs_uint64.h
+@@ -46,7 +46,6 @@ typedef uint64_t dvbcsa_bs_word_t;
+ #define BS_AND(a, b)	((a) & (b))
+ #define BS_OR(a, b)	((a) | (b))
+ #define BS_XOR(a, b)	((a) ^ (b))
+-#define BS_XOREQ(a, b)	((a) ^= (b))
+ #define BS_NOT(a)	(~(a))
+ 
+ #define BS_SHL(a, n)	((a) << (n))
+diff --git a/test/testbsops.c b/test/testbsops.c
+index 8a22aa0..50748ab 100644
+--- a/test/testbsops.c
++++ b/test/testbsops.c
+@@ -204,13 +204,6 @@ main		(void)
+   c = BS_XOR(a, b);
+   vec_testeq(BS_VAL8(45), c);
+ 
+-  /* test XOREQ */
+-
+-  a = BS_VAL8(5a);
+-  b = BS_VAL8(1f);
+-  BS_XOREQ(b, a);
+-  vec_testeq(BS_VAL8(45), b);
+-
+   /* test NOT */
+ 
+   a = BS_VAL8(5a);
+-- 
+2.1.4
+

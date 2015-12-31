@@ -1,0 +1,27 @@
+From 4eccdbb96eaf7d5b5d5cc1c054a4dd9ea2597aa7 Mon Sep 17 00:00:00 2001
+From: diaxen <diaxen@3589dd83-fcde-432d-8375-59f0e9bff529>
+Date: Mon, 20 May 2013 20:14:12 +0000
+Subject: [PATCH 2/8] removed use of deprecated AM_CONFIG_HEADER macro in
+ configure.ac
+
+git-svn-id: svn://svn.videolan.org/libdvbcsa/trunk@14 3589dd83-fcde-432d-8375-59f0e9bff529
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 533f45d..ed8a1ad 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -16,7 +16,7 @@ AC_ARG_ENABLE(sse2, AC_HELP_STRING(--enable-sse2, [Use SSE2 for bitslice]), sse2
+ AC_ARG_ENABLE(altivec, AC_HELP_STRING(--enable-altivec, [Use AltiVec for bitslice]), altivec_debug=$enableval, enable_altivec=no)
+ 
+ AM_INIT_AUTOMAKE(libdvbcsa, 1.1.0)
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+ 
+ AC_PROG_CC
+ 
+-- 
+2.1.4
+
