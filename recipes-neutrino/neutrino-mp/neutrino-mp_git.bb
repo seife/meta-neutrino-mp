@@ -105,6 +105,8 @@ do_install_append() {
 	install -d ${D}/share/
 	ln -s ../usr/share/tuxbox ${D}/share/
 	ln -s ../usr/share/fonts  ${D}/share/
+	_VC=${D}/var/tuxbox/config
+	cp -p ${_VC}/bad_package_pattern.list.sample ${_VC}/bad_package_pattern.list
 }
 
 # disarm all automatic restart stuff, or we will blow up
@@ -149,6 +151,16 @@ FILES_${PN} += "\
 	/share/tuxbox \
 	/var/cache \
 	/var/tuxbox/plugins \
+"
+
+CONFFILES_${PN} += " \
+	/var/tuxbox/config/bad_package_pattern.list \
+	/var/tuxbox/config/cables.xml \
+	/var/tuxbox/config/radio-stations.xml \
+	/var/tuxbox/config/satellites.xml \
+	/var/tuxbox/config/terrestrial.xml \
+	/var/tuxbox/config/nhttpd.conf \
+	/var/tuxbox/config/tobackup.conf \
 "
 
 pkg_postinst_${PN} () {
