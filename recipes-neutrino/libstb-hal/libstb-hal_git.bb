@@ -104,3 +104,8 @@ FILES_spark-fp = " \
 	${bindir}/spark_fp \
 	${sysconfdir} \
 "
+
+pkg_postinst_${PN} () {
+	# after updating libstb-hal, neutrino should be restarted.
+	touch /tmp/.restart
+}
