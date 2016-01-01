@@ -173,4 +173,6 @@ pkg_postinst_${PN} () {
 		I=/usr/share/tuxbox/neutrino/icons
 		pic2m2v $I/mp3.jpg $I/radiomode.jpg $I/scan.jpg $I/shutdown.jpg $I/start.jpg
 	fi
+	# after updating neutrino, it should be restarted...
+	touch /tmp/.restart
 }
