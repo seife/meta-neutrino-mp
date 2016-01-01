@@ -45,9 +45,12 @@ RDEPENDS_${PN}_append_spark += " spark-fp"
 
 RCONFLICTS_${PN} = "neutrino-hd2"
 
+# loosely follow the commercial versioning
+N_MAJOR = "3"
+N_MINOR = "01"
+
 SRCREV = "${AUTOREV}"
-PV = "0.1+git${SRCPV}"
-PR = "r2"
+PV = "${N_MAJOR}.${N_MINOR}+git${SRCPV}"
 
 NEUTRINO_MP_GIT ?= "git://github.com/neutrino-mp/neutrino-mp.git"
 
@@ -93,7 +96,7 @@ do_install_prepend () {
 	install -d ${D}/var/cache
 	install -d ${D}/var/tuxbox/config/
 	install -d ${D}/var/tuxbox/plugins/
-	echo "version=1200`date +%Y%m%d%H%M`"    > ${D}/.version 
+	echo "version=1${N_MAJOR}${N_MINOR}`date +%Y%m%d%H%M`" > ${D}/.version
 	echo "creator=${MAINTAINER}"             >> ${D}/.version 
 	echo "imagename=Neutrino-MP"             >> ${D}/.version 
 	echo "homepage=${HOMEPAGE}"              >> ${D}/.version 
