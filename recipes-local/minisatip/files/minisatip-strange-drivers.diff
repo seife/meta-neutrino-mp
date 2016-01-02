@@ -1,0 +1,13 @@
+diff --git a/dvb.c b/dvb.c
+index bfed196..1801e05 100644
+--- a/dvb.c
++++ b/dvb.c
+@@ -126,6 +126,8 @@ int dvb_open_device(adapter *ad)
+ 	ad->fe = open(buf, O_RDWR | O_NONBLOCK);
+ 	sprintf(buf, "/dev/dvb/adapter%d/dvr%d", ad->pa, ad->fn);
+ 	ad->dvr = open(buf, O_RDONLY | O_NONBLOCK);
++	if (ad->dvr < 0)
++		ad->dvr = open(buf, O_RDONLY);
+ 	if (ad->fe < 0 || ad->dvr < 0)
+ 	{
+ 		sprintf(buf, "/dev/dvb/adapter%d/frontend%d", ad->pa, ad->fn);
