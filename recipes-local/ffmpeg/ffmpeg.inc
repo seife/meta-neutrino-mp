@@ -10,7 +10,8 @@ DEPENDS = " \
 	zlib libogg yasm-native \
 "
 
-DEPENDS_append_spark = "libxml2 libbluray"
+DEPENDS_append_spark = "libxml2"
+DEPENDS_append_raspberrypi = "libxml2"
 DEPENDS_append_coolstream = "libxml2"
 
 INC_PR = "r1"
@@ -173,9 +174,7 @@ EXTRA_OECONF_append_spark = " \
 	--disable-runtime-cpudetect \
 	--enable-demuxers \
 	--disable-devices \
-	--enable-protocol=bluray \
-	--enable-libbluray \
-	--disable-bsfs \
+	--enable-bsfs \
 	--disable-optimizations \
 "
 
