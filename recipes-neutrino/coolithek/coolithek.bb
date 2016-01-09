@@ -5,25 +5,33 @@ LICENSE = "GPL-2.0+"
 PACKAGE_ARCH = "all"
 
 LIC_FILES_CHKSUM = " \
-	file://var/tuxbox/plugins/coolithek/COPYING;md5=751419260aa954499f7abaabaa882bbe \
+	file://coolithek/COPYING;md5=751419260aa954499f7abaabaa882bbe \
 "
 
-PV = "0.2beta-8_2015-12-08"
+SRCREV = "${AUTOREV}"
+P_V = "0.2beta-9"
+PV = "${P_V}+git${SRCPV}"
 PR = "r0"
 
-### the .bin file which is distributed is actually a .tar.gz...
 SRC_URI = " \
-	file://coolithekV${PV}.tar.gz \
+	git://git.slknet.de/git/mediathek-luaV2.git;branch=master \
 "
 
 RDEPENDS_${PN} = "lua-json"
 
-S = "${WORKDIR}/temp_inst/inst"
+S = "${WORKDIR}/git"
+
+do_configure () {
+	# fail early, if the code version has changed against our package version
+	eval `awk '/pluginVersion[[:space:]]*=/{print "PLUGINVERSION="$3}' coolithek/variables.lua`
+	echo "pluginversion='$PLUGINVERSION' packageversion='${P_V}'"
+	test x$PLUGINVERSION = x${P_V}
+}
 
 do_install () {
-	install -d ${D}/${libdir}/tuxbox/
+	install -d ${D}/${libdir}/tuxbox/plugins
 	install -d ${D}/${datadir}/lua/5.2
-	cp -r --preserve=timestamps ${S}/var/tuxbox/ ${D}/${libdir}/
+	cp -r --preserve=timestamps ${S}/coolithek*  ${D}/${libdir}/tuxbox/plugins
 	cp -r --preserve=timestamps ${S}/share/lua   ${D}/${datadir}/
 }
 
