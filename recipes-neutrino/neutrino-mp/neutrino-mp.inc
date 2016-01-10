@@ -12,7 +12,6 @@ EXTRA_OECONF = " \
 	--enable-maintainer-mode \
 	--with-target=native \
 	--disable-silent-rules \
-	--with-tremor \
 	--enable-giflib \
 	--enable-mdev \
 	--with-stb-hal-includes=${STAGING_DIR_HOST}/usr/include/libstb-hal \
@@ -20,21 +19,26 @@ EXTRA_OECONF = " \
 
 EXTRA_OECONF_append_raspberrypi += "\
 	--with-boxtype=generic --with-boxmodel=raspi \
+	--enable-ffmpegdec \
 "
 
 EXTRA_OECONF_append_tripledragon += "\
 	--with-boxtype=tripledragon \
+	--with-tremor \
 	--disable-upnp \
 "
 
 EXTRA_OECONF_append_coolstream += "\
 	--with-boxtype=coolstream \
+	--enable-ffmpegdec \
 "
 
 EXTRA_OECONF_append_spark += "\
 	--with-boxtype=spark \
+	--enable-ffmpegdec \
 "
 
 EXTRA_OECONF_append_spark7162 += "\
 	--with-boxtype=spark \
+	--enable-ffmpegdec \
 "

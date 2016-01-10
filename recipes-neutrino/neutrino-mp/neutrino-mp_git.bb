@@ -14,17 +14,12 @@ PREFERRED_PROVIDER_virtual/stb-hal-libs ?= "libstb-hal"
 DEPENDS += " \
 	virtual/stb-hal-libs \
 	curl \
-	libid3tag \
-	libmad \
 	freetype \
 	giflib \
 	libpng \
 	jpeg \
 	libdvbsi++ \
 	ffmpeg \
-	flac \
-	tremor \
-	libvorbis \
 	openthreads \
 	lua5.2 \
 	luaposix \
@@ -40,6 +35,14 @@ RDEPENDS_${PN} += " \
 DEPENDS_append_tripledragon = " \
 	td-dvb-wrapper \
 "
+# need to check ffmpegdec on triple...
+DEPENDS_append_tripledragon = " \
+	tremor \
+	flac \
+	libid3tag \
+	libmad \
+	libvorbis \
+"
 RDEPENDS_${PN}_append_tripledragon += "kernel-module-td-dvb-frontend"
 RDEPENDS_${PN}_append_spark += " spark-fp"
 
@@ -51,6 +54,7 @@ N_MINOR = "01"
 
 SRCREV = "${AUTOREV}"
 PV = "${N_MAJOR}.${N_MINOR}+git${SRCPV}"
+PR = "r1"
 
 NEUTRINO_MP_GIT ?= "git://github.com/neutrino-mp/neutrino-mp.git"
 
