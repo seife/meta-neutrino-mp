@@ -22,6 +22,11 @@ EXTRA_OECONF_append_raspberrypi += "\
 	--enable-ffmpegdec \
 "
 
+EXTRA_OECONF_append_raspberrypi2 += "\
+	--with-boxtype=generic --with-boxmodel=raspi \
+	--enable-ffmpegdec \
+"
+
 EXTRA_OECONF_append_tripledragon += "\
 	--with-boxtype=tripledragon \
 	--with-tremor \

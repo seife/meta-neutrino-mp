@@ -12,6 +12,7 @@ DEPENDS = " \
 
 DEPENDS_append_spark = "libxml2"
 DEPENDS_append_raspberrypi = "libxml2"
+DEPENDS_append_raspberrypi2 = "libxml2"
 DEPENDS_append_coolstream = "libxml2"
 
 INC_PR = "r1"

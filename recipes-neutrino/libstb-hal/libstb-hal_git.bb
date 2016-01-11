@@ -25,6 +25,7 @@ PROVIDES += "virtual/stb-hal-libs"
 
 DEPENDS_append_spark = "tdt-driver libass"
 DEPENDS_append_raspberrypi = "virtual/egl"
+DEPENDS_append_raspberrypi2 = "virtual/egl"
 DEPENDS_append_tripledragon = "directfb triple-sdk"
 
 RDEPENDS_${PN} = "ffmpeg"
@@ -69,6 +70,7 @@ EXTRA_OECONF += "\
 
 EXTRA_OECONF_append_spark += "--with-boxtype=spark"
 EXTRA_OECONF_append_raspberrypi += "--with-boxtype=generic --with-boxmodel=raspi"
+EXTRA_OECONF_append_raspberrypi2 += "--with-boxtype=generic --with-boxmodel=raspi"
 EXTRA_OECONF_append_tripledragon += "--with-boxtype=tripledragon"
 
 do_configure_prepend() {
