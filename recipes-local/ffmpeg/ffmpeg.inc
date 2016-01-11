@@ -15,7 +15,7 @@ DEPENDS_append_raspberrypi = "libxml2"
 DEPENDS_append_raspberrypi2 = "libxml2"
 DEPENDS_append_coolstream = "libxml2"
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 inherit autotools pkgconfig
 
@@ -81,6 +81,8 @@ EXTRA_OECONF = " \
     --disable-encoder=dpx \
     --disable-parser=dpx \
     --disable-doc \
+    --disable-xlib \
+    --disable-libxcb \
     ${EXTRA_FFCONF} \
 "
 EXTRA_OECONF_append_raspberrypi = " \
