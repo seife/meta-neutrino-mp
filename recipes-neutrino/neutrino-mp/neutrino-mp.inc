@@ -7,6 +7,8 @@ N_LDFLAGS += "-Wl,-rpath-link,${STAGING_DIR_HOST}/usr/lib"
 N_CPPFLAGS = "-DDYNAMIC_LUAPOSIX"
 CPPFLAGS = "${N_CPPFLAGS}"
 CPPFLAGS_tripledragon += "${N_CPPFLAGS} -I${STAGING_DIR_HOST}/usr/include/hardware"
+# why is this only needed on ppc?
+CPPFLAGS_tripledragon += " -D__STDC_CONSTANT_MACROS "
 
 EXTRA_OECONF = " \
 	--enable-maintainer-mode \
