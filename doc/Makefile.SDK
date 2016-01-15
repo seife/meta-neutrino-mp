@@ -21,9 +21,15 @@ endif
 ifeq ($(ARCH),powerpc)
 PLATFORM ?= tripledragon
 endif
+## arm can be: coolstream, raspberrypi, raspberrypi2
 ifeq ($(ARCH),arm)
-# TODO: distinguish raspi!
+_FOO = $(shell echo $(CC) | grep -- -mtune=cortex-a7)
+ifeq ($(_FOO),)
 PLATFORM ?= coolstream
+else
+# cortex-a7 is raspi2, need to find a sign for raspi1, too...
+PLATFORM ?= generic --with-boxmodel=raspi
+endif
 endif
 
 SOURCE = $(PWD)/source
