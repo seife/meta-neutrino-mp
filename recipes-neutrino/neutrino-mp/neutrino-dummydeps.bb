@@ -54,6 +54,10 @@ DEPENDS_append_raspberrypi = "\
 	virtual/egl \
 "
 
+DEPENDS_append_raspberrypi2 = "\
+	userland \
+"
+
 RDEPENDS_${PN}_append_coolstream = "\
 	virtual/stb-hal-libs \
 "
