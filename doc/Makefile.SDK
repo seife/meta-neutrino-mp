@@ -89,7 +89,7 @@ $(LH_OBJ)/config.status: | $(LH_OBJ) $(LH_SRC)
 	$(LH_SRC)/autogen.sh
 	set -e; cd $(LH_OBJ); \
 		$(LH_SRC)/configure --enable-maintainer-mode \
-			--prefix= \
+			--prefix=/usr \
 			--enable-shared=no \
 			--with-boxtype=$(PLATFORM) \
 			$(CONFIGURE_FLAGS) \
@@ -103,11 +103,14 @@ $(N_OBJ)/config.status: | sdkcheck $(N_OBJ) $(N_SRC) $(N_DEPS)
 			--enable-giflib \
 			--enable-cleanup \
 			--with-tremor \
+			--enable-ffmpegdec \
 			--enable-mdev \
-			--prefix= \
-			--with-target=cdk --with-boxtype=$(PLATFORM) \
+			--prefix=/usr \
+			--exec_prefix=/usr \
+			--datadir=/usr/share --localstatedir=/var --libdir=/usr/lib \
+			--with-target=native --with-boxtype=$(PLATFORM) \
 			$(CONFIGURE_FLAGS) \
-			--with-stb-hal-includes=$(DEST)/include/libstb-hal \
+			--with-stb-hal-includes=$(DEST)/usr/include/libstb-hal \
 			--with-stb-hal-build=$(LH_OBJ) \
 			; \
 		test -e svn_version.h || echo '#define BUILT_DATE "error - not set"' > svn_version.h; \
