@@ -24,6 +24,9 @@ SRC_URI_append = " \
 	file://0005-ffplay-Use-sws_scale-to-scale-subtitles.patch \
 	file://0006-avcodec-dvbsubdec-Add-option-to-select-when-to-compu.patch \
 "
+SRC_URI_append = " \
+	file://ffmpeg-add-tremor-decoding-support.patch \
+"
 
 
 SRC_URI[ffmpeg-2.7.4.md5sum] = "86e3238deb5aa77eee772c8b88d0c3cb"

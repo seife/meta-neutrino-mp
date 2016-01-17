@@ -14,6 +14,7 @@ DEPENDS_append_spark = "libxml2"
 DEPENDS_append_raspberrypi = "libxml2"
 DEPENDS_append_raspberrypi2 = "libxml2"
 DEPENDS_append_coolstream = "libxml2"
+DEPENDS_append_tripledragon = "tremor"
 
 INC_PR = "r2"
 
@@ -195,6 +196,31 @@ EXTRA_OECONF_append_tripledragon = " \
 	--enable-encoder=mpeg2video --enable-muxer=mpeg2video \
 	--enable-decoder=dvbsub --enable-demuxer=mpegps \
 	--enable-parser=mjpeg --enable-demuxer=mjpeg --enable-decoder=mjpeg \
+	--enable-parser=mpegaudio \
+	--enable-parser=flac \
+	--enable-parser=vorbis \
+	--enable-demuxer=mpegts \
+	--enable-demuxer=mpegtsraw \
+	--enable-demuxer=mpegps \
+	--enable-demuxer=mpegvideo \
+	--enable-demuxer=wav \
+	--enable-demuxer=pcm_s16be \
+	--enable-demuxer=mp3 \
+	--enable-demuxer=pcm_s16le \
+	--enable-demuxer=rtsp \
+	--enable-demuxer=wav \
+	--enable-demuxer=ogg \
+	--enable-demuxer=flac \
+	--enable-decoder=mp3 \
+	--enable-decoder=flac \
+	--enable-decoder=aac \
+	--enable-decoder=pcm_s16le \
+	--enable-decoder=pcm_s16le_planar \
+	--enable-encoder=pcm_s16le \
+	--enable-encoder=pcm_s16le_planar \
+	--enable-muxer=wav \
+	--enable-libvorbisidec \
+	--enable-decoder=libvorbisidec \
 	--disable-bsfs --disable-network \
 	--enable-dct \
 "
