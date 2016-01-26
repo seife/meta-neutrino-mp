@@ -20,7 +20,7 @@ SRC_URI[sha256sum] = "a745a62950689b9cf39c8213047a8f0403ebd82c488be301578d7b6906
 S = "${WORKDIR}/OpenThreads-svn-13083/"
 
 do_unpack() {
-	lzcat ${DL_DIR}/OpenThreads-svn-13083.tar.lzma | tar x
+	lzcat ${THISDIR}/openthreads/OpenThreads-svn-13083.tar.lzma | tar x
 }
 
 inherit cmake 
