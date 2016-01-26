@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = " \
 "
 
 SRCREV = "${AUTOREV}"
-P_V = "0.2beta-9"
+P_V = "0.2beta-10"
 PV = "${P_V}+git${SRCPV}"
 PR = "r0"
 
