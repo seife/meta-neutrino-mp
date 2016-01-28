@@ -16,7 +16,6 @@ IMAGE_INSTALL += " \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
 	e2fsprogs-tune2fs \
-	djmount \
 	autofs \
 	util-linux-blkid \
 "
