@@ -54,7 +54,7 @@ N_MINOR = "01"
 
 SRCREV = "${AUTOREV}"
 PV = "${N_MAJOR}.${N_MINOR}+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 NEUTRINO_MP_GIT ?= "git://github.com/neutrino-mp/neutrino-mp.git"
 

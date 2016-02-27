@@ -33,6 +33,12 @@ message() {
 }
 
 start_neutrino() {
+	# create the important files before first start
+	if which pic2m2v >/dev/null 2>&1; then
+		I=/usr/share/tuxbox/neutrino/icons
+		pic2m2v $I/start.jpg # this is needed first, the others can go in background
+		pic2m2v $I/scan.jpg $I/shutdown.jpg $I/mp3.jpg $I/radiomode.jpg &
+	fi
 	# spark: find out if we are running on HDMI or on SCART...
 	if [ -e /sys/class/stmcoredisplay/hdmi0.0/hotplug ]; then
 		read H < /sys/class/stmcoredisplay/hdmi0.0/hotplug
