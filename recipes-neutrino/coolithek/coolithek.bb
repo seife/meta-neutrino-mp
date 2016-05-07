@@ -14,7 +14,7 @@ PV = "${P_V}+git${SRCPV}"
 PR = "r0"
 
 SRC_URI = " \
-	git://git.slknet.de/git/mediathek-luaV2.git;branch=master \
+	git://git.slknet.de/mediathek-luaV2.git;branch=master;protocol=https \
 "
 
 RDEPENDS_${PN} = "lua-json"
