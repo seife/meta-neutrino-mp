@@ -5,12 +5,12 @@ Some stuff in here has been copied over from meta-magpie
 (git://github.com/project-magpie/meta-magpie.git)
 
 Right now, the master branch is supposed to work with
-yocto release dizzy.
+yocto release krogoth.
 
 It is not yet finished and some hacks in it need improvement.
 There's probably also some stuff in there which should move into
 other layers or be pushed back upstream into the board BSPs,
-especially everything recipes-raspi and recipes-local.
+especially everything in recipes-local.
 This is on my TODO list :-)
 
 Anyway, have a lot of fun...
