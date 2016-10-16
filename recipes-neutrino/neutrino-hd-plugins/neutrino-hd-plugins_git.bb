@@ -24,9 +24,9 @@ EXTRA_OECONF += " \
 	--with-configdir=/var/tuxbox/config \
 "
 
-EXTRA_OECONF_append_spark = "--with-boxtype=spark"
-EXTRA_OECONF_append_coolstream = "--with-boxtype=coolstream"
-EXTRA_OECONF_append_tripledragon = "--with-boxtype=tripledragon"
+EXTRA_OECONF_append_spark = " --with-boxtype=spark"
+EXTRA_OECONF_append_coolstream = " --with-boxtype=coolstream"
+EXTRA_OECONF_append_tripledragon = " --with-boxtype=tripledragon"
 
 N_CFLAGS = "-Wall -W -Wshadow -g -O2 -funsigned-char"
 N_CXXFLAGS = "${N_CFLAGS}"
