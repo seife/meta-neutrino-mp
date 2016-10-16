@@ -13,8 +13,11 @@ P_V = "0.2beta-11"
 PV = "${P_V}+git${SRCPV}"
 PR = "r0"
 
+SOURCE_SLKNET = "git://git.slknet.de/mediathek-luaV2.git;branch=master;protocol=https"
+SOURCE_GITHUB = "git://github.com/seife/mediathek-luaV2.git;branch=master;protocol=https"
+
 SRC_URI = " \
-	git://git.slknet.de/mediathek-luaV2.git;branch=master;protocol=https \
+	${SOURCE_GITHUB} \
 "
 
 RDEPENDS_${PN} = "lua-json"
