@@ -11,7 +11,7 @@ SRC_URI = " \
 	file://00aliases \
 "
 
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 LIC_FILES_CHKSUM = "file://COPYING.MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "busybox-telnetd busybox-inetd"
 
 do_install() {
 	install -m 0644 -D ${S}/default.bootlogd ${D}/${sysconfdir}/default/bootlogd
-	install -m 0644 -D ${S}/00aliases        ${D}/${sysconfdir}/profile.d/00aliases
+	install -m 0644 -D ${S}/00aliases        ${D}/${sysconfdir}/profile.d/00aliases.sh
 }
 
 CONFFILES_$PN = " \
