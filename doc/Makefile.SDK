@@ -38,8 +38,16 @@ DEST = $(PWD)/root
 
 LH_SRC = $(SOURCE)/libstb-hal
 LH_OBJ = $(OBJ)/libstb-hal
+#
+# "FLAVOUR=nhd" will use neutrino-hd source instead of neutrino-mp
+ifeq ($(FLAVOUR),nhd)
+N_SRC  = $(SOURCE)/neutrino-tuxbox
+N_OBJ  = $(OBJ)/neutrino-tuxbox
+DEST   = $(PWD)/root-tb
+else
 N_SRC  = $(SOURCE)/neutrino-mp
 N_OBJ  = $(OBJ)/neutrino-mp
+endif
 
 # C_FLAGS += -Wnarrowing -Wconversion
 C_FLAGS += -rdynamic
@@ -120,7 +128,7 @@ $(N_OBJ)/config.status: | sdkcheck $(N_OBJ) $(N_SRC) $(N_DEPS)
 $(OBJ):
 	mkdir $(OBJ)
 
-$(OBJ)/neutrino-mp \
+$(N_OBJ) \
 $(OBJ)/libstb-hal: | $(OBJ)
 	mkdir $@
 
@@ -128,10 +136,13 @@ $(SOURCE):
 	mkdir $@
 
 $(LH_SRC): | $(SOURCE)
-	cd $(SOURCE) && git clone git://gitorious.org/neutrino-hd/libstb-hal.git
+	cd $(SOURCE) && git clone https://github.com/neutrino-mp/libstb-hal.git
 
-$(N_SRC): | $(SOURCE)
-	cd $(SOURCE) && git clone git://gitorious.org/neutrino-mp/neutrino-mp.git
+$(SOURCE)/neutrino-mp: | $(SOURCE)
+	cd $(SOURCE) && git clone https://github.com/neutrino-mp/neutrino-mp.git
+
+$(SOURCE)/neutrino-tuxbox: | $(SOURCE)
+	cd $(SOURCE) && git clone https://github.com/tuxbox-neutrino/gui-neutrino.git neutrino-tuxbox
 
 checkout: $(SRC_DEP) $(N_SRC)
 
