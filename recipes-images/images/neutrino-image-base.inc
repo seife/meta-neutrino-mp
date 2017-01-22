@@ -16,7 +16,6 @@ IMAGE_INSTALL += " \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
 	e2fsprogs-tune2fs \
-	autofs \
 	util-linux-blkid \
 "
 
@@ -26,5 +25,9 @@ IMAGE_INSTALL += "${@'udev-extraconf' if MACHINE != 'tripledragon' else ''}"
 # Include modules in rootfs, but not on coolstream, where
 # flash is small...
 IMAGE_INSTALL += "${@'kernel-modules' if MACHINE != 'coolstream' else ''}"
+
+# we don't strictly need the kernel-image package, because kernel is packed extra
+# for USB and flash images, but without it installed it is impossible to update later
+IMAGE_INSTALL += "${@'kernel-image' if MACHINE != 'tripledragon' else ''}"
 
 EXTRAOPKGCONFIG = "neutrino-feed-config"
