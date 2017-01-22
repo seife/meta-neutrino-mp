@@ -48,9 +48,9 @@ RDEPENDS_${PN}_append_spark += " spark-fp"
 
 RCONFLICTS_${PN} = "neutrino-hd2"
 
-# loosely follow the commercial versioning
+# loosely follow the tuxbox versioning
 N_MAJOR = "3"
-N_MINOR = "01"
+N_MINOR = "4"
 
 SRCREV = "${AUTOREV}"
 PV = "${N_MAJOR}.${N_MINOR}+git${SRCPV}"
