@@ -15,6 +15,13 @@
 
 # first, update package database
 opkg update
+# now try to self-update
+if opkg list-upgradable | grep "^system-update-script "; then
+	if opkg install system-update-script; then
+		# call the symlinked name, so that this script can be renamed later
+		exec system-update
+	fi
+fi
 # update all opkg packages, multiple tries
 if opkg list-upgradable | grep "^opkg "; then
 	for PKG in opkg-arch-config update-alternatives-opkg opkg; do
@@ -38,19 +45,17 @@ if opkg list-upgradable | grep "^opkg "; then
 	opkg configure
 fi
 # now update busybox, or all others will fail
-if opkg list-upgradable | grep "^busybox "; then
-	opkg install busybox
-	if [ $? != 0 ]; then
-		echo "================================================"
-		echo "busybox failed"
-		echo "================================================"
-		exit 2
+# sysvinit also leads to strange results => handle outside "opkg upgrade"
+for PKG in busybox sysvinit; do
+	if opkg list-upgradable | grep "^$PKG "; then
+		opkg install $PKG
+		if [ $? != 0 ]; then
+			echo "================================================"
+			echo "$PKG failed"
+			echo "================================================"
+			exit 2
+		fi
 	fi
-fi
-# sysvinit also leads to strange results => put it first
-if opkg list-upgradable | grep "^sysvinit "; then
-	opkg install sysvinit
-fi
-#
+done
 # now the standard upgrade...
 opkg upgrade
