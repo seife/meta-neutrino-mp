@@ -51,9 +51,10 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 # loosely follow the tuxbox versioning
 N_MAJOR = "3"
 N_MINOR = "4"
+N_MICRO = "0"
 
 SRCREV = "${AUTOREV}"
-PV = "${N_MAJOR}.${N_MINOR}+git${SRCPV}"
+PV = "${N_MAJOR}.${N_MINOR}.${N_MICRO}+git${SRCPV}"
 PR = "r2"
 
 NEUTRINO_MP_GIT ?= "git://github.com/neutrino-mp/neutrino-mp.git"
@@ -89,7 +90,6 @@ do_compile () {
 	oe_runmake CFLAGS="${N_CFLAGS}" CXXFLAGS="${N_CXXFLAGS}" LDFLAGS="${N_LDFLAGS}"
 }
 
-
 do_install_prepend () {
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 755 ${WORKDIR}/neutrino.init ${D}/${sysconfdir}/init.d/neutrino
@@ -100,7 +100,7 @@ do_install_prepend () {
 	install -d ${D}/var/cache
 	install -d ${D}/var/tuxbox/config/
 	install -d ${D}/var/tuxbox/plugins/
-	echo "version=1${N_MAJOR}${N_MINOR}`date +%Y%m%d%H%M`" > ${D}/.version
+	echo "version=1${N_MAJOR}${N_MINOR}${N_MICRO}`date +%Y%m%d%H%M`" > ${D}/.version
 	echo "creator=${MAINTAINER}"             >> ${D}/.version 
 	echo "imagename=Neutrino-MP"             >> ${D}/.version 
 	echo "homepage=${HOMEPAGE}"              >> ${D}/.version 
