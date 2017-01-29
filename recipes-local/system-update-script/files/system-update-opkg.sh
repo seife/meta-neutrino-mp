@@ -57,5 +57,9 @@ for PKG in busybox sysvinit; do
 		fi
 	fi
 done
+##
+## magic string to reset the error flag in the opkg updater gui
+echo "system-update: err_reset"
+echo "Running upgrade now..."
 # now the standard upgrade...
 opkg upgrade
