@@ -86,6 +86,10 @@ do_configure_prepend() {
 }
 
 do_compile () {
+	PKG_VER="$(sed -n '/^#define PACKAGE_VERSION/s/#define PACKAGE_VERSION //p' config.h)"
+	if test $PKG_VER != '"${N_MAJOR}.${N_MINOR}.${N_MICRO}"'; then
+		bbfatal "Package version $PKG_VER not consistent with neutrino_mp.bb"
+	fi
 	# unset CFLAGS CXXFLAGS LDFLAGS
 	oe_runmake CFLAGS="${N_CFLAGS}" CXXFLAGS="${N_CXXFLAGS}" LDFLAGS="${N_LDFLAGS}"
 }
