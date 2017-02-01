@@ -51,11 +51,11 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 # loosely follow the tuxbox versioning
 N_MAJOR = "3"
 N_MINOR = "4"
-N_MICRO = "0"
+N_MICRO = "1"
 
 SRCREV = "${AUTOREV}"
 PV = "${N_MAJOR}.${N_MINOR}.${N_MICRO}+git${SRCPV}"
-PR = "r2"
+#PR = "r2"
 
 NEUTRINO_MP_GIT ?= "git://github.com/neutrino-mp/neutrino-mp.git"
 
