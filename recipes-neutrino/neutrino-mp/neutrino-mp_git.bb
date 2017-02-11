@@ -24,6 +24,7 @@ DEPENDS += " \
 	lua5.2 \
 	luaposix \
 	libsigc++-2.0 \
+	pugixml \
 "
 
 RDEPENDS_${PN} += " \

@@ -14,6 +14,7 @@ EXTRA_OECONF = " \
 	--enable-maintainer-mode \
 	--with-target=native \
 	--disable-silent-rules \
+	--enable-pugixml \
 	--enable-giflib \
 	--enable-mdev \
 	--with-stb-hal-includes=${STAGING_DIR_HOST}/usr/include/libstb-hal \
