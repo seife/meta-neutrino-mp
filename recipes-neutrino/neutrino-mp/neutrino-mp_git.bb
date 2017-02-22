@@ -52,7 +52,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 # loosely follow the tuxbox versioning
 N_MAJOR = "3"
 N_MINOR = "4"
-N_MICRO = "1"
+N_MICRO = "2"
 
 SRCREV = "${AUTOREV}"
 PV = "${N_MAJOR}.${N_MINOR}.${N_MICRO}+git${SRCPV}"
@@ -89,7 +89,8 @@ do_configure_prepend() {
 do_compile () {
 	PKG_VER="$(sed -n '/^#define PACKAGE_VERSION/s/#define PACKAGE_VERSION //p' config.h)"
 	if test $PKG_VER != '"${N_MAJOR}.${N_MINOR}.${N_MICRO}"'; then
-		bbfatal "Package version $PKG_VER not consistent with neutrino_mp.bb"
+		bbwarn "Package version $PKG_VER not consistent with neutrino_mp.bb"
+		bbwarn "configured version is ${N_MAJOR}.${N_MINOR}.${N_MICRO}"
 	fi
 	# unset CFLAGS CXXFLAGS LDFLAGS
 	oe_runmake CFLAGS="${N_CFLAGS}" CXXFLAGS="${N_CXXFLAGS}" LDFLAGS="${N_LDFLAGS}"
