@@ -10,9 +10,12 @@ SRC_URI = "http://storage.googleapis.com/google-code-archive-downloads/v2/code.g
 
 inherit autotools pkgconfig
 
+PR="r1"
+
 EXTRA_OECONF = " \
 	--enable-enca \
 	--enable-fontconfig \
+	--disable-harfbuzz \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ae98663bac55afe5d989919d296f28a"
