@@ -16,7 +16,7 @@ DEPENDS_append_raspberrypi2 = "libxml2"
 DEPENDS_append_coolstream = "libxml2"
 DEPENDS_append_tripledragon = "tremor"
 
-INC_PR = "r2"
+INC_PR = "r3"
 
 inherit autotools pkgconfig
 
@@ -46,6 +46,7 @@ TARGET_CFLAGS_append_spark = " \
 
 #PACKAGECONFIG ??= "bzip2 x264 ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 #PACKAGECONFIG ??= "bzip2"
+PACKAGECONFIG ??= "gnutls"
 PACKAGECONFIG[jack] = "--enable-indev=jack,--disable-indev=jack,jack"
 PACKAGECONFIG[bzip2] = "--enable-bzlib,--disable-bzlib,bzip2"
 PACKAGECONFIG[schroedinger] = "--enable-libschroedinger,--disable-libschroedinger,schroedinger"
@@ -55,6 +56,7 @@ PACKAGECONFIG[vpx] = "--enable-libvpx,--disable-libvpx,libvpx"
 PACKAGECONFIG[mp3lame] = "--enable-libmp3lame,--disable-libmp3lame,lame"
 PACKAGECONFIG[faac] = "--enable-libfaac,--disable-libfaac,faac"
 PACKAGECONFIG[x11] = "--enable-x11grab,--disable-x11grab,virtual/libx11 libxfixes libxext xproto"
+PACKAGECONFIG[gnutls] = "--enable-gnutls,--disable-gnutls,gnutls"
 
 EXTRA_OECONF = " \
     --disable-stripping \
