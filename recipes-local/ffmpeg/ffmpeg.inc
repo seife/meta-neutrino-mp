@@ -16,7 +16,7 @@ DEPENDS_append_raspberrypi2 = "libxml2"
 DEPENDS_append_coolstream = "libxml2"
 DEPENDS_append_tripledragon = "tremor"
 
-INC_PR = "r3"
+INC_PR = "r4"
 
 inherit autotools pkgconfig
 
@@ -160,15 +160,6 @@ EXTRA_OECONF_append_coolstream = " \
 	--disable-encoders \
 	--disable-muxers \
 	--disable-filters \
-	--disable-protocols \
-	--enable-protocol=file \
-	--enable-protocol=http \
-	--enable-protocol=rtmp \
-	--enable-protocol=rtmpe \
-	--enable-protocol=rtmps \
-	--enable-protocol=rtmpte \
-	--enable-protocol=mmsh \
-	--enable-protocol=mmst \
 	--enable-bsfs \
 	--disable-devices \
 	--enable-swresample \
