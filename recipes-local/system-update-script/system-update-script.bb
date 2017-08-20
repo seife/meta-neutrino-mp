@@ -4,7 +4,7 @@ SECTION = "base"
 LICENSE = "WTFPLv2"
 LIC_FILES_CHKSUM = "file://copying.wtfpl;md5=389a9e29629d1f05e115f8f05c283df5"
 
-PV = "0.42.1"
+PV = "0.42.2"
 
 inherit allarch
 

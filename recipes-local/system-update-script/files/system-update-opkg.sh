@@ -12,22 +12,25 @@
 # * missing wget makes all other updates fail
 # * then busybox postinst is run, recreating wget
 #
+# use --volatile-cache if not configured differently via $OPKG env variable
+# this helps avoiding filling up /var/cache on space-limited boxes
+: ${OPKG:=opkg --volatile-cache}
 
 # first, update package database
-opkg update
+$OPKG update
 # now try to self-update
-if opkg list-upgradable | grep "^system-update-script "; then
-	if opkg install system-update-script; then
+if $OPKG list-upgradable | grep "^system-update-script "; then
+	if $OPKG install system-update-script; then
 		# call the symlinked name, so that this script can be renamed later
 		exec system-update
 	fi
 fi
 # update all opkg packages, multiple tries
-if opkg list-upgradable | grep "^opkg "; then
+if $OPKG list-upgradable | grep "^opkg "; then
 	for PKG in opkg-arch-config update-alternatives-opkg opkg; do
 		SUCCESS=false
 		for i in 1 2 3; do
-			if opkg install --force-reinstall $PKG; then
+			if $OPKG install --force-reinstall $PKG; then
 				SUCCESS=true
 				break
 			fi
@@ -42,13 +45,13 @@ if opkg list-upgradable | grep "^opkg "; then
 			exit 1
 		fi
 	done
-	opkg configure
+	$OPKG configure
 fi
 # now update busybox, or all others will fail
 # sysvinit also leads to strange results => handle outside "opkg upgrade"
 for PKG in busybox sysvinit; do
-	if opkg list-upgradable | grep "^$PKG "; then
-		opkg install $PKG
+	if $OPKG list-upgradable | grep "^$PKG "; then
+		$OPKG install $PKG
 		if [ $? != 0 ]; then
 			echo "================================================"
 			echo "$PKG failed"
@@ -62,4 +65,4 @@ done
 echo "system-update: err_reset"
 echo "Running upgrade now..."
 # now the standard upgrade...
-opkg upgrade
+$OPKG upgrade
