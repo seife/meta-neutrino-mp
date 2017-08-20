@@ -15,6 +15,6 @@ SRC_URI[sha256sum] = "8ef26a51c670fbe79a71e9af94df4884d5a4b00a2db38a0608a87c1411
 
 inherit cmake
 
-#EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS:BOOL=ON"
+EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS:BOOL=ON"
 
 FILES_${PN}-dev += "${libdir}/cmake/pugixml/*"
