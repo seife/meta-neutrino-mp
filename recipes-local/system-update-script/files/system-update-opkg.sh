@@ -14,7 +14,11 @@
 #
 # use --volatile-cache if not configured differently via $OPKG env variable
 # this helps avoiding filling up /var/cache on space-limited boxes
-: ${OPKG:=opkg --volatile-cache}
+if opkg --volatile-cache print-architecture 2>&1 > /dev/null | grep -q "Duplicate boolean option volatile_cache"; then
+	: ${OPKG:=opkg}	# already set in config file...
+else
+	: ${OPKG:=opkg --volatile-cache}
+fi
 
 # first, update package database
 $OPKG update
