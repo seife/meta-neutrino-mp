@@ -31,3 +31,6 @@ IMAGE_INSTALL += "${@'kernel-modules' if MACHINE != 'coolstream' else ''}"
 IMAGE_INSTALL += "${@'kernel-image' if MACHINE != 'tripledragon' else ''}"
 
 EXTRAOPKGCONFIG = "neutrino-feed-config"
+
+SDKIMAGE_FEATURES_append = " staticdev-pkgs"
+TOOLCHAIN_TARGET_TASK_append = " lua5.2-dev"
