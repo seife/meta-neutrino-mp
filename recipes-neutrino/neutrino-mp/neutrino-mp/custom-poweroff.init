@@ -36,6 +36,7 @@ if test -e /sys/class/rtc/rtc0/wakealarm; then
 	NOW=$(date +%s)
 	OFFSET=$((RTC_NOW - NOW)) # offset between UTC and localtime
 	read WAKEUP < $TIMER
+	test $((WAKEUP + 0)) -lt 1 && exit 0 # no valid time or 0
 	WAKEUP=$((WAKEUP + OFFSET))
 	echo "setting wakeup time to $WAKEUP (NOW: $RTC_NOW, OFFSET: $OFFSET)"
 	if test $WAKEUP -lt $((RTC_NOW + 30)); then
