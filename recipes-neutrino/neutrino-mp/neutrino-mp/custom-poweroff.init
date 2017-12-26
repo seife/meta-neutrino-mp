@@ -16,14 +16,15 @@ test -e $TIMER || exit 0
 
 # TODO: more platforms
 # coolstream custom poweroff binary
-if type uncooloff > /dev/null; then
+CS_HELPER=`type -p uncooloff || type -p shutdown_helper`
+if [ $? = 0 ]; then
 	PARAM=`cat $TIMER`
 	# this is necessary because the kernel does not do it
 	# when shut down via uncooloff
 	echo "shutting down harddrives"
 	hdparm -y /dev/sd*[^0-9] 2>/dev/null # only sda, not sda1
-	echo "calling 'uncooloff "$PARAM"'"
-	uncooloff $PARAM
+	echo "calling '$CS_HELPER "$PARAM"'"
+	$CS_HELPER $PARAM
 	# we should not come here :-)
 fi
 ## platforms with proper hwclock
