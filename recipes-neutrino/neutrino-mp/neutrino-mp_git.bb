@@ -51,7 +51,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 
 # loosely follow the tuxbox versioning
 N_MAJOR = "3"
-N_MINOR = "6"
+N_MINOR = "7"
 N_MICRO = "0"
 
 SRCREV = "${AUTOREV}"
