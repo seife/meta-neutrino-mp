@@ -65,16 +65,13 @@ start_neutrino() {
 		echo "Neutrino exited with exit code $RET"
 		$MESSAGE "neutrino:$RET"
 		if [ $RET = 1 ]; then
-			touch /tmp/.halt
-		fi
-		# $MESSAGE "start_n ends"
-		if [ -e /tmp/.reboot ]; then # gets created by neutrino
-			$MESSAGE "rebooting..."
-			reboot
-			break
-		elif [ -e /tmp/.halt ]; then
 			$MESSAGE "shutting down..."
 			poweroff
+			break
+		fi
+		if [ $RET = 2 -o -e /tmp/.reboot ]; then # gets created by neutrino
+			$MESSAGE "rebooting..."
+			reboot
 			break
 		else
 			$MESSAGE "ERROR" "$RET"
