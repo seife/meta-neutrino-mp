@@ -52,7 +52,7 @@ RCONFLICTS_${PN} = "neutrino-hd2"
 # loosely follow the tuxbox versioning
 N_MAJOR = "3"
 N_MINOR = "7"
-N_MICRO = "0"
+N_MICRO = "1"
 
 SRCREV = "${AUTOREV}"
 PV = "${N_MAJOR}.${N_MINOR}.${N_MICRO}+git${SRCPV}"
@@ -120,6 +120,8 @@ do_install_append() {
 	ln -s ../usr/share/fonts  ${D}/share/
 	_VC=${D}/var/tuxbox/config
 	cp -p ${_VC}/bad_package_pattern.list.sample ${_VC}/bad_package_pattern.list
+	# do not package the default config
+	rm -f ${_VC}/tuxtxt/tuxtxt2.conf
 }
 
 # disarm all automatic restart stuff, or we will blow up
